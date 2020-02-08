@@ -19,11 +19,24 @@ Here's what I plan to do for this project:
 
 
 ## Wonderful cs courses from coursera
+I would like to take this chance to say big thank-you to coursera, a platform that provides so many wonderful courses to learners. Also I want to say big thank-you to those instructors who spent lots of efforts to put good materials online.
 
-- [programming with a purpose](https://www.coursera.org/learn/cs-programming-java)
-- [algorithm part 1](https://www.coursera.org/learn/algorithms-part1/)
-- [algorithm part 2](https://www.coursera.org/learn/algorithms-part2)
-- [computer science algorithms theory and machines](https://www.coursera.org/learn/cs-algorithms-theory-machines)
+Especially, big big thank-you to Robert Sedgewick and Kevin Wayne from Princeton. Both of them are so generous by providing such wonderful cs courses online for free. The width and depth of their knowledge really impressed and benefited me in many ways. By completing assignements one after another, I built up the confidence on my programming skills, and of course, enjoyed a lot from writing code.
+
+Below are the list of courses I've completed.
+
+- [programming with a purpose](https://www.coursera.org/learn/cs-programming-java) from Princeton University, grades achieved 99.3%
+- [algorithm part 1](https://www.coursera.org/learn/algorithms-part1/) from Princeton University, grades achieved 100.0%
+- [algorithm part 2](https://www.coursera.org/learn/algorithms-part2) from Princeton University, grades achieved 98.4%
+- [computer science algorithms theory and machines](https://www.coursera.org/learn/cs-algorithms-theory-machines) from Princeton University, grades achieved 100%
+- [python programming: a concise introduction](https://www.coursera.org/learn/python-programming-introduction) from Wesleyan University, grades achieved 100.0%
+- [machine learning](https://www.coursera.org/learn/machine-learning) from Stanford University, grades achieved 99.2%
+
+
+Below are the list of courses in progress.
+
+- [Analysis of Algorithms](https://www.coursera.org/learn/analysis-of-algorithms/) from Princeton University
+- [Build a Modern Computer from First Principles: From Nand to Tetris (Project-Centered Course)](https://www.coursera.org/learn/build-a-computer/) from Hebrew University of Jerusalem
 
 
 ## The Beauty of Programming

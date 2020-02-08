@@ -1,7 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
 
 /******************************************************************************
- *  author:     Rhett Zhang
+ *  author:     Xiaoyu Zhang
  *  created:    2020/02/03
  *  Compilation:  javac-algs4 BoPCollection.java
  *  Execution:    java-algs4 BoPCollection

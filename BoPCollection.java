@@ -1,7 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
 
 /******************************************************************************
- *  author:     Xiaoyu Zhang
+ *  author:     Rhett Zhang
  *  created:    2020/02/03
  *  Compilation:  javac-algs4 BoPCollection.java
  *  Execution:    java-algs4 BoPCollection
@@ -120,6 +120,87 @@ public class BoPCollection {
         return false;
     }
 
+    // problem #3.2
+    // find the corrsponding English word for the telephone number
+    // note: below implementation from the book is problematic,
+    // and I implemented in another separate file PhoneWords.java
+    public static void getAllWordsFromPhone(int[] phone) {
+        int numDigit = 10;                  // number of digits
+        int phoneLength = phone.length;     // length of telephone number
+
+        String[] numToChar = {
+                "", "", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ"
+        };
+
+        int[] total = new int[numDigit];    // the number of chars for each digit
+        for (int i = 0; i < numDigit; i++) {
+            total[i] = numToChar[i].length();
+            // StdOut.println(total[i]);
+        }
+
+        int[] answer = new int[phoneLength];
+
+        while (true) {
+            for (int i = 0; i < phoneLength; i++) {
+                StdOut.printf("%d: %d, %d :", i, phone[i], answer[i]);
+                StdOut.printf("%c \t", numToChar[phone[i]].charAt(answer[i]));
+            }
+
+            StdOut.println();
+
+            int k = phoneLength - 1;
+            while (k >= 0) {
+                if (answer[k] < total[phone[k] - 1]) {
+                    answer[k]++;
+                    break;
+                }
+                else {
+                    answer[k] = 0;
+                    k--;
+                }
+            }
+            if (k < 0)
+                break;
+        }
+    }
+
+    // problem #3.3
+    // compute the similarity between two strings
+    // note: the detailed implementation is in the file LevenshteinDistance.java
+
+    // problem #3.4
+    // delete a node from a linked list without the link to the first node
+    public static void deleteRandomNode(Node current) {
+        if (current == null)
+            throw new IllegalArgumentException("Node to be deleted is null!");
+
+        Node next = current.next;
+        if (next != null) {
+            current.next = next.next;
+            current.val = next.val;
+        }
+    }
+
+    private static class Node {
+        int val;
+        Node next;
+
+        public Node() {
+            this.val = -1;
+            this.next = null;
+        }
+
+        public Node(int val) {
+            this.val = val;
+            this.next = null;
+        }
+
+        public Node(int val, Node next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+
     /**
      * Unit tests the {@code FileManager} data type.
      *
@@ -152,5 +233,25 @@ public class BoPCollection {
         String s2 = "CDAA";
         StdOut.printf("problem #3.1 \n");
         StdOut.printf("is %s constains %s: %b \n\n", s1, s2, BoPCollection.isRotateContain(s1, s2));
+
+        //  problem #3.2
+        /*
+        int[] phone = { 5, 8, 6, 9, 8, 7, 2 };
+        StdOut.printf("problem #3.2 \n");
+        BoPCollection.getAllWordsFromPhone(phone);
+        */
+
+        //  problem #3.4
+        StdOut.printf("problem #3.4 \n");
+
+        Node n1 = new Node(1);
+        Node n2 = new Node(2);
+        Node n3 = new Node(3);
+        n1.next = n2;
+        n2.next = n3;
+        BoPCollection.deleteRandomNode(n2);
+        for (Node cur = n1; cur != null; cur = cur.next)
+            StdOut.printf("%d \t", cur.val);
+        StdOut.println();
     }
 }

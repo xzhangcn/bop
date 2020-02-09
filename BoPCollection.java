@@ -170,15 +170,45 @@ public class BoPCollection {
 
     // problem #3.4
     // delete a node from a linked list without the link to the first node
-    public static void deleteRandomNode(Node current) {
-        if (current == null)
+    public static void deleteRandomNode(Node curr) {
+        if (curr == null)
             throw new IllegalArgumentException("Node to be deleted is null!");
 
-        Node next = current.next;
+        Node next = curr.next;
         if (next != null) {
-            current.next = next.next;
-            current.val = next.val;
+            curr.next = next.next;
+            curr.val = next.val;
         }
+    }
+
+    // problem #3.4.1
+    // given the pointer to the first node of a linked list, reverse the linked
+    // list by only traversing this list once
+    // below solution is credited to leetcode
+    public static Node reverseList(Node head) {
+
+        Node prev = null;
+        Node curr = head;
+
+        while (curr != null) {
+            Node nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+
+        return prev;
+    }
+
+    // problem #3.4.1
+    // recursive approach, which is credited to leetcode
+    public static Node reverseList2(Node head) {
+        if (head == null || head.next == null)
+            return head;
+        Node p = reverseList2(head.next);
+        head.next.next = head;
+        head.next = null;
+        return p;
     }
 
     private static class Node {
@@ -247,11 +277,33 @@ public class BoPCollection {
         Node n1 = new Node(1);
         Node n2 = new Node(2);
         Node n3 = new Node(3);
+        Node n4 = new Node(4);
+        Node n5 = new Node(5);
+        Node n6 = new Node(6);
         n1.next = n2;
         n2.next = n3;
-        BoPCollection.deleteRandomNode(n2);
+        n3.next = n4;
+        n4.next = n5;
+        n5.next = n6;
+        BoPCollection.deleteRandomNode(n4);
         for (Node cur = n1; cur != null; cur = cur.next)
             StdOut.printf("%d \t", cur.val);
         StdOut.println();
+
+        //  problem #3.4.1
+        StdOut.printf("problem #3.4.1 \n");
+        Node newHead = BoPCollection.reverseList(n1);
+        for (Node cur = newHead; cur != null; cur = cur.next)
+            StdOut.printf("%d \t", cur.val);
+        StdOut.println();
+
+        // problem #3.4.1
+        // recursive approach
+        StdOut.printf("problem #3.4.1 recursive approach\n");
+        Node newHead2 = BoPCollection.reverseList2(newHead);
+        for (Node cur = newHead2; cur != null; cur = cur.next)
+            StdOut.printf("%d \t", cur.val);
+        StdOut.println();
+
     }
 }

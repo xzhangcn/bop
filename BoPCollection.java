@@ -184,7 +184,6 @@ public class BoPCollection {
     // problem #3.4.1
     // given the pointer to the first node of a linked list, reverse the linked
     // list by only traversing this list once
-    // below solution is credited to leetcode
     public static Node reverseList(Node head) {
 
         Node prev = null;
@@ -229,6 +228,27 @@ public class BoPCollection {
             this.val = val;
             this.next = next;
         }
+    }
+
+    // problem #3.6
+    // check whether two linked lists are intersected.
+    public static boolean isIntersected(Node head1, Node head2) {
+        if (head1 == null || head2 == null)
+            return false;
+
+        Node curr = head1.next;
+        // traverse through first linked list
+        while (curr.next != null)
+            curr = curr.next;
+
+        Node tail1 = curr;  // store the end node of first linked list
+
+        curr = head2.next;
+        // traverse through second linked list
+        while (curr.next != null)
+            curr = curr.next;
+
+        return (tail1.equals(curr));    // now curr is the end node of second linked list
     }
 
     /**
@@ -303,7 +323,17 @@ public class BoPCollection {
         Node newHead2 = BoPCollection.reverseList2(newHead);
         for (Node cur = newHead2; cur != null; cur = cur.next)
             StdOut.printf("%d \t", cur.val);
-        StdOut.println();
+        StdOut.println("\n");
 
+        // problem #3.6
+        StdOut.printf("problem #3.6\n");
+        Node nn1 = new Node(11);
+        Node nn2 = new Node(22);
+        nn1.next = nn2;
+        nn2.next = n3;
+
+        StdOut.printf("if two linked lists are intersected? %b \n",
+                      BoPCollection.isIntersected(n1, nn1));
+        StdOut.println("\n");
     }
 }

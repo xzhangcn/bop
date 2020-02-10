@@ -251,6 +251,27 @@ public class BoPCollection {
         return (tail1.equals(curr));    // now curr is the end node of second linked list
     }
 
+    // problem #3.6.1
+    // find the intersection node if two linked lists are intersected
+    public static Node getIntersectionNode(Node head1, Node head2) {
+        if (head1 == null || head2 == null)
+            return null;
+        Node p1 = head1, p2 = head2;
+        while (p1 != p2) {
+            if (p1 == null)
+                p1 = head2;
+            else
+                p1 = p1.next;
+
+            if (p2 == null)
+                p2 = head1;
+            else
+                p2 = p2.next;
+        }
+
+        return p1;
+    }
+
     /**
      * Unit tests the {@code FileManager} data type.
      *
@@ -334,6 +355,9 @@ public class BoPCollection {
 
         StdOut.printf("if two linked lists are intersected? %b \n",
                       BoPCollection.isIntersected(n1, nn1));
+        StdOut.printf("these two linked lists are intersected at node with value %d \n",
+                      BoPCollection.getIntersectionNode(n1, nn1).val);
         StdOut.println("\n");
+
     }
 }

@@ -1,5 +1,7 @@
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
+
+import java.awt.Font;
 
 /******************************************************************************
  *  author:     Xiaoyu Zhang
@@ -19,11 +21,61 @@ import edu.princeton.cs.algs4.StdRandom;
  ******************************************************************************/
 
 public class Sudoku {
-    private final short SIZE = 9;
+    private final int SIZE = 9;
     private Cell[][] grid;
 
     public Sudoku() {
         grid = new Cell[SIZE][SIZE];
+    }
+
+    public void startGame() {
+        generateGame();
+
+        drawBoard();
+
+        /*
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                StdOut.printf("%s \t", grid[i][j].value);
+            }
+            StdOut.println();
+        }
+        */
+    }
+
+    // draw the board
+    public void drawBoard() {
+        StdDraw.clear();
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setXscale(-0.05 * SIZE, 1.05 * SIZE);
+        StdDraw.setYscale(-0.05 * SIZE, 1.05 * SIZE);   // leave a border to write text
+
+        // StdDraw.filledSquare(size / 2.0, size / 2.0, size / 2.0);
+
+        // draw the grid lines
+        for (int idx = 0; idx <= SIZE; idx++) {
+            StdDraw.line(0, idx, SIZE, idx);    // horizontal lines
+            StdDraw.line(idx, 0, idx, SIZE);    // vertical lines
+        }
+
+        // draw n-by-n grid
+        StdDraw.setFont(new Font("SansSerif", Font.PLAIN, 35));
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+
+                if (grid[row][col].value == 0)
+                    StdDraw.setPenColor(StdDraw.GRAY);          // draw the blank square in GRAY
+                else
+                    StdDraw.setPenColor(StdDraw.BLUE);
+
+                StdDraw.filledSquare(col + 1 - 0.5, SIZE - 1 - row + 0.5, 0.45);
+
+                StdDraw.setPenColor(StdDraw.RED);
+                StdDraw.text(col + 1 - 0.5, SIZE - 1 - row + 0.5,
+                             Integer.toString(grid[row][col].value));
+            }
+        }
     }
 
     // fill in the central subgrid with numbers 1 to 9 randomly
@@ -180,17 +232,6 @@ public class Sudoku {
         fillBelowTo6thSubGrid();
     }
 
-    public void drawBoard() {
-        generateGame();
-
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                StdOut.printf("%s \t", grid[i][j].value);
-            }
-            StdOut.println();
-        }
-    }
-
     private class Cell {
         public int row;
         public int col;
@@ -219,6 +260,6 @@ public class Sudoku {
 
     public static void main(String[] args) {
         Sudoku sdk = new Sudoku();
-        sdk.drawBoard();
+        sdk.startGame();
     }
 }

@@ -67,6 +67,37 @@ public class BinaryTree<Item> {
         list.enqueue(node.val);
     }
 
+    // Level order traversal is a special case of BFS.
+    public LinkedQueue<LinkedQueue<Item>> levelOrderTraversal(TreeNode<Item> root) {
+        LinkedQueue<LinkedQueue<Item>> result = new LinkedQueue<>();
+        if (root == null)
+            return result;
+
+        LinkedQueue<TreeNode<Item>> queue = new LinkedQueue<>();
+        queue.enqueue(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();    // the number of nodes at each level
+
+            // a list created at each level to hold nodes
+            LinkedQueue<Item> level = new LinkedQueue<>();
+
+            while (size != 0) {
+                TreeNode<Item> curr = queue.dequeue();
+                level.enqueue(curr.val);
+                if (curr.left != null)
+                    queue.enqueue(curr.left);
+                if (curr.right != null)
+                    queue.enqueue(curr.right);
+
+                size--;
+            }
+
+            result.enqueue(level);
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         TreeNode<Character> nF = new TreeNode<Character>('F');
         TreeNode<Character> nB = new TreeNode<Character>('B');
@@ -99,5 +130,11 @@ public class BinaryTree<Item> {
         for (Character c : bt.postOrderTraversal(nF))
             StdOut.printf("%c \t", c);
         StdOut.println();
+
+        for (LinkedQueue<Character> list : bt.levelOrderTraversal(nF)) {
+            for (Character c : list)
+                StdOut.printf("%c \t", c);
+            StdOut.println();
+        }
     }
 }

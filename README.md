@@ -1,6 +1,7 @@
 # Beauty of Programming
 
 > This little project is originated from my journey of returning to be the programmer.
+![beauty of programm](images/bop.jpg)
  
 
 ## What is it?
@@ -35,6 +36,7 @@ Below are the list of courses I've completed.
 
 Below are the list of courses in progress.
 
+- [Object-Oriented Design](https://www.coursera.org/learn/object-oriented-design/) from Alberta University
 - [Analysis of Algorithms](https://www.coursera.org/learn/analysis-of-algorithms/) from Princeton University
 - [Build a Modern Computer from First Principles: From Nand to Tetris (Project-Centered Course)](https://www.coursera.org/learn/build-a-computer/) from Hebrew University of Jerusalem
 

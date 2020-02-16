@@ -220,6 +220,99 @@ public class BinaryTree<Item> {
         return false;
     }
 
+    // Given inorder and postorder traversal of a tree, construct the binary tree.
+    public TreeNode<Integer> buildTree(int[] inOrder, int[] postOrder) {
+        return buildTree(inOrder, inOrder.length - 1, 0, postOrder, postOrder.length - 1);
+    }
+
+    private TreeNode<Integer> buildTree(int[] inOrder, int inStart, int inEnd, int[] postOrder,
+                                        int postStart) {
+        if (postStart < 0 || inStart < inEnd)
+            return null;
+
+        TreeNode<Integer> root = new TreeNode<>(postOrder[postStart]);
+
+        // find root's index from inOrder, iterating from the end
+        int rootIndex = inStart;
+        for (int i = inStart; i >= inEnd; i--) {
+            if (inOrder[i] == postOrder[postStart]) {
+                rootIndex = i;
+                break;
+            }
+        }
+
+        // build the left and right subtrees, going through from the end
+        root.left = buildTree(inOrder, rootIndex - 1, inEnd, postOrder,
+                              postStart - (inStart - rootIndex) - 1);
+        root.right = buildTree(inOrder, inStart, rootIndex + 1, postOrder, postStart - 1);
+
+        return root;
+    }
+
+    // Given inorder and postorder traversal of a tree, construct the binary tree.
+    // Iterative approach
+    // This approach is not easy to understand. Better to use recursive one.
+    // The key idea for iterative version is:
+    //      - Start from the last element of the postorder and inorder array,
+    //          and put elements from postorder array to a stack. Each one
+    //          is the right child of the last one, until an element in
+    //          postorder array is equal to the element on the inorder array.
+    //
+    //      - Then, pop as many elements as we can from the stack
+    //          and decrease the index in inorder array until the peek()
+    //          element is not equal to the value at the index or the stack is empty.
+    //
+    //      - Then, the new element that we are going to retrieve from postorder
+    //          array is the left child of the last element we have popped
+    //          out from the stack.
+
+    public TreeNode<Integer> buildTree2(int[] inOrder, int[] postOrder) {
+        if (inOrder.length == 0)
+            return null;
+
+        int len = inOrder.length;
+
+        LinkedStack<TreeNode<Integer>> stack = new LinkedStack<>();
+        TreeNode<Integer> root = new TreeNode<>(postOrder[len - 1]);
+        stack.push(root);
+
+        // index for inOrder array
+        int inIndex = len - 1;
+
+        // index for postOrder array. Root already stored in the stack.
+        int postIndex = len - 2;
+
+        while (postIndex >= 0) {
+            TreeNode<Integer> curr = stack.peek();
+
+            if (curr.val != inOrder[inIndex]) {
+                // as long as the rightmost node is not reached,
+                // we can safely follow the right path and attach right child.
+                TreeNode<Integer> rightNode = new TreeNode<>(postOrder[postIndex]);
+                curr.right = rightNode;
+                stack.push(rightNode);
+                postIndex--;
+
+            }
+            else {
+                // find the node on the stack, whose left subtree is not visited yet.
+                while (!stack.isEmpty() && stack.peek().val == inOrder[inIndex]) {
+                    curr = stack.pop();
+                    inIndex--;
+                }
+
+                TreeNode<Integer> leftNode = new TreeNode<>(postOrder[postIndex]);
+                curr.left = leftNode;
+                stack.push(leftNode);
+                postIndex--;
+            }
+        }
+
+        // StdOut.printf("the value on the top of the stack: %d \n", stack.peek().val);
+
+        return root;
+    }
+
     /**
      * Unit tests the {@code FileManager} data type.
      *
@@ -309,5 +402,15 @@ public class BinaryTree<Item> {
                       bt2.hasPathSum(n5, sum));
         StdOut.printf("iterative approach: The tree has a path which sums up to %d? %b \n", sum,
                       bt2.hasPathSum2(n5, sum));
+
+        StdOut.println(
+                "\n Testing: construct binary tree from inOrder and postOrder traversal.");
+        int[] inorder = { 9, 3, 15, 20, 7 };
+        int[] postorder = { 9, 15, 7, 20, 3 };
+        TreeNode<Integer> newRoot = bt2.buildTree2(inorder, postorder);
+        StdOut.println("postOrderTraversal for the rebuilt tree");
+        for (int num : bt2.postOrderTraversal(newRoot))
+            StdOut.printf("%d \t", num);
+        StdOut.println();
     }
 }

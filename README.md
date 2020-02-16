@@ -60,7 +60,7 @@ I earned master degree from UC Santa Cruz, then started the career as the softwa
 
 At that point, I am not satisfied as being an engineer or engineering lead, and wanted to know the business logic behind the engineering decisions. So went back to B-school and studied the topics such as finance, marketing, economics... After B school, I got into the investment bank doing the financial models. 
 
-A couple years ago, I involved in different Business Intelligence projects which required significant Linux/PHP/MySQL knowledge. In such a short timeframe, I quicked refreshed and grasped the knowledge and skills required, and built a complex automation system like the Automatic Report Scheduler that delivered over 2000 reports daily, and the BI Web Portal optimization and enhancements. This is the turning point for me back to the engineering track.
+A couple years ago, I involved in different Business Intelligence projects which required significant Linux/PHP/MySQL knowledge. In such a short timeframe, I refreshed and grasped the knowledge and skills required, and built a complex automation system like the Automatic Report Scheduler that delivered over 2000 reports daily, and the BI Web Portal optimization and enhancements. This is the turning point for me back to the engineering track.
 
 Then and now, doing data analytics using SQL, Python and machine learning techniques at e-commerce company. Actually, the latest experience prompted me to refresh myself with the knowledge of data structure, algorithms and more computer related topics. 
 

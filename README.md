@@ -1,7 +1,12 @@
 # Beauty of Programming
 
 > This little project is originated from my journey of returning to be the programmer.
-![beauty of programm](images/bop.jpg)
+
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+    <img src="images/bop.png" alt="logo">
+</p>
  
 
 ## What is it?

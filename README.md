@@ -5,7 +5,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-    <img src="images/bop.png" alt="logo">
+    <img src="images/bop.jpg" alt="logo">
 </p>
  
 

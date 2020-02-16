@@ -313,6 +313,58 @@ public class BinaryTree<Item> {
         return root;
     }
 
+
+    // Given preorder and inorder traversal of a tree, construct the binary tree.
+    public TreeNode<Integer> buildTreeFromPreIn(int[] preOrder, int[] inOrder) {
+        return buildTreeFromPreIn(preOrder, 0, preOrder.length - 1, inOrder, 0, inOrder.length - 1);
+    }
+
+    /*
+     * how to get the index of the right child:
+     *  - Our aim is to find out the index of right child for current node in
+     *      the preorder array.
+     *  - We know the index of current node in the preorder array - preStart,
+     *      it's the root of a subtree.
+     *  - Remember pre order traversal always visit all the node on left
+     *      branch before going to the right ( root -> left -> ... -> right),
+     *      therefore, we can get the immediate right child index by skipping
+     *      all the node on the left branches/subtrees of current node.
+     *  - The inorder array has this information exactly. Remember when we
+     *      found the root in "inorder" array we immediately know how many
+     *      nodes are on the left subtree and how many are on the right subtree.
+     *  - Therefore the immediate right child index is preStart + numsOnLeft + 1
+     *      (remember in preorder traversal array root is always ahead of
+     *      children nodes but you don't know which one is the left child
+     *       which one is the right, and this is why we need inorder array)
+     *  - numsOnLeft = root - inStart.
+     */
+    private TreeNode<Integer> buildTreeFromPreIn(int[] preOrder, int preStart, int preEnd,
+                                                 int[] inOrder, int inStart, int inEnd) {
+        if (preStart > preEnd || inStart > inEnd)
+            return null;
+
+        TreeNode<Integer> root = new TreeNode<>(preOrder[preStart]);
+
+        // find root's index from inOrder, iterating from the beginning
+        int inIndex = 0;
+        for (int i = inStart; i <= inEnd; i++) {
+            if (inOrder[i] == preOrder[preStart]) {
+                inIndex = i;
+                break;
+            }
+        }
+
+        // build the left and right subtrees, going through from the beginning
+        int leftTreeLen = inIndex - inStart;
+        root.left = buildTreeFromPreIn(preOrder, preStart + 1, preStart + leftTreeLen,
+                                       inOrder, inStart, inIndex - 1);
+        root.right = buildTreeFromPreIn(preOrder, preStart + leftTreeLen + 1, preEnd,
+                                        inOrder, inIndex + 1, inEnd);
+
+        return root;
+    }
+
+
     /**
      * Unit tests the {@code FileManager} data type.
      *
@@ -338,33 +390,33 @@ public class BinaryTree<Item> {
         nD.right = nE;
         nI.left = nH;
 
-        StdOut.println("\n Testing: preOrderTraversal");
+        StdOut.println("\n>>> Testing: preOrderTraversal");
         BinaryTree<Character> bt = new BinaryTree<>();
         for (Character c : bt.preOrderTraversal(nF))
             StdOut.printf("%c \t", c);
         StdOut.println();
 
-        StdOut.println("\n Testing: inOrderTraversal");
+        StdOut.println("\n>>> Testing: inOrderTraversal");
         for (Character c : bt.inOrderTraversal(nF))
             StdOut.printf("%c \t", c);
         StdOut.println();
 
-        StdOut.println("\n Testing: postOrderTraversal");
+        StdOut.println("\n>>> Testing: postOrderTraversal");
         for (Character c : bt.postOrderTraversal(nF))
             StdOut.printf("%c \t", c);
         StdOut.println();
 
-        StdOut.println("\n Testing: levelOrderTraversal");
+        StdOut.println("\n>>> Testing: levelOrderTraversal");
         for (LinkedQueue<Character> list : bt.levelOrderTraversal(nF)) {
             for (Character c : list)
                 StdOut.printf("%c \t", c);
             StdOut.println();
         }
 
-        StdOut.println("\n Testing: maxDepth");
+        StdOut.println("\n>>> Testing: maxDepth");
         StdOut.printf("The depth of the tree is %d \n", bt.maxDepth(nF));
 
-        StdOut.println("\n Testing: isSymmetric");
+        StdOut.println("\n>>> Testing: isSymmetric");
         StdOut.printf("The tree is symmetric? %b \n", bt.isSymmetric(nF));
 
         TreeNode<Integer> n1 = new TreeNode<Integer>(1);
@@ -377,7 +429,7 @@ public class BinaryTree<Item> {
         StdOut.printf("The tree is symmetric? %b \n", bt2.isSymmetric2(n1));
         StdOut.printf("The tree is symmetric? %b \n", bt2.isSymmetric3(n1));
 
-        StdOut.println("\n Testing: hasPathSum");
+        StdOut.println("\n>>> Testing: hasPathSum");
         TreeNode<Integer> n5 = new TreeNode<Integer>(5);
         TreeNode<Integer> n4 = new TreeNode<Integer>(4);
         TreeNode<Integer> n8 = new TreeNode<Integer>(8);
@@ -404,7 +456,7 @@ public class BinaryTree<Item> {
                       bt2.hasPathSum2(n5, sum));
 
         StdOut.println(
-                "\n Testing: construct binary tree from inOrder and postOrder traversal.");
+                "\n>>> Testing: construct binary tree from inOrder and postOrder traversal.");
         int[] inorder = { 9, 3, 15, 20, 7 };
         int[] postorder = { 9, 15, 7, 20, 3 };
         TreeNode<Integer> newRoot = bt2.buildTree2(inorder, postorder);
@@ -412,5 +464,15 @@ public class BinaryTree<Item> {
         for (int num : bt2.postOrderTraversal(newRoot))
             StdOut.printf("%d \t", num);
         StdOut.println();
+
+        StdOut.println(
+                "\n>>> Testing: construct binary tree from preOrder and inOrder traversal.");
+        int[] preorder = { 3, 9, 20, 15, 7 };
+        TreeNode<Integer> newRoot2 = bt2.buildTreeFromPreIn(preorder, inorder);
+        StdOut.println("postOrderTraversal for the rebuilt tree");
+        for (int num : bt2.postOrderTraversal(newRoot2))
+            StdOut.printf("%d \t", num);
+        StdOut.println();
+
     }
 }

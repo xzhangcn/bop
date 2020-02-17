@@ -365,6 +365,75 @@ public class BinaryTree<Item> {
     }
 
 
+    // populating next right pointers in each node for a perfect binary tree.
+    // The algorithm below is similar to level order traversal.
+    public TreeNode<Item> connectLevelRight(TreeNode<Item> root) {
+
+        LinkedStack<TreeNode<Item>> stack = new LinkedStack<>();
+        LinkedStack<TreeNode<Item>> levelStack = new LinkedStack<>();
+
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            int size = stack.size();    // the number of nodes at each level
+            TreeNode<Item> nextNode = null;
+
+            while (size != 0) {
+                TreeNode<Item> currNode = stack.pop();
+
+                // StdOut.printf("currNode %d, size %d \n", currNode.val, size);
+                levelStack.push(currNode);
+
+                currNode.next = nextNode;
+                nextNode = currNode;
+
+                size--;
+            }
+
+            while (!levelStack.isEmpty()) {
+                TreeNode<Item> currLevelNode = levelStack.pop();
+                if (currLevelNode.left != null)
+                    stack.push(currLevelNode.left);
+                if (currLevelNode.right != null)
+                    stack.push(currLevelNode.right);
+            }
+        }
+
+        return root;
+    }
+
+    // Iterative version with two additional pointers
+    public TreeNode<Item> connectLevelRight2(TreeNode<Item> root) {
+
+        TreeNode<Item> prev = root;
+
+        while (prev != null && prev.left != null) {
+            TreeNode<Item> curr = prev;
+            while (curr != null) {
+                curr.left.next = curr.right;
+                curr.right.next = curr.next == null ? null : curr.next.left;
+                curr = curr.next;
+            }
+
+            prev = prev.left;
+        }
+
+        return root;
+    }
+
+    // recursive version
+    public TreeNode<Item> connectLevelRight3(TreeNode<Item> root) {
+        connectLevelRight3(root, null);
+        return root;
+    }
+
+    private void connectLevelRight3(TreeNode<Item> curr, TreeNode<Item> next) {
+        if (curr == null) return;
+        curr.next = next;
+        connectLevelRight3(curr.left, curr.right);
+        connectLevelRight3(curr.right, curr.next == null ? null : curr.next.left);
+    }
+
+
     /**
      * Unit tests the {@code FileManager} data type.
      *
@@ -474,5 +543,38 @@ public class BinaryTree<Item> {
             StdOut.printf("%d \t", num);
         StdOut.println();
 
+
+        StdOut.println("\n>>> Testing: connectLevelRight");
+        TreeNode<Integer> n1_5 = new TreeNode<Integer>(1);
+        TreeNode<Integer> n2_5 = new TreeNode<Integer>(2);
+        TreeNode<Integer> n3_5 = new TreeNode<Integer>(3);
+        TreeNode<Integer> n4_5 = new TreeNode<Integer>(4);
+        TreeNode<Integer> n5_5 = new TreeNode<Integer>(5);
+        TreeNode<Integer> n6_5 = new TreeNode<Integer>(6);
+        TreeNode<Integer> n7_5 = new TreeNode<Integer>(7);
+        n1_5.left = n2_5;
+        n1_5.right = n3_5;
+        n2_5.left = n4_5;
+        n2_5.right = n5_5;
+        n3_5.left = n6_5;
+        n3_5.right = n7_5;
+
+        TreeNode<Integer> newRoot3 = bt2.connectLevelRight3(n1_5);
+        LinkedStack<TreeNode<Integer>> stack = new LinkedStack<>();
+        stack.push(newRoot3);
+        while (!stack.isEmpty()) {
+            TreeNode<Integer> currNode = stack.pop();
+
+            if (currNode.left != null)
+                stack.push(currNode.left);
+
+            StdOut.printf("%d \t", currNode.val);
+            while (currNode.next != null) {
+                currNode = currNode.next;
+                StdOut.printf("%d \t", currNode.val);
+            }
+            StdOut.printf("# \t");
+        }
+        StdOut.println();
     }
 }

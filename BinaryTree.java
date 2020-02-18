@@ -433,6 +433,80 @@ public class BinaryTree<Item> {
         connectLevelRight3(curr.right, curr.next == null ? null : curr.next.left);
     }
 
+    // populating next right pointers in each node for a non-perfect binary tree.
+    public TreeNode<Item> connectLevelRight4(TreeNode<Item> root) {
+
+        TreeNode<Item> head = root;     // The left most node in the lower level
+        TreeNode<Item> prev = null;     // The previous node in the lower level
+        TreeNode<Item> curr = null;     // The current node in the upper level
+
+        while (head != null) {
+            curr = head;
+            prev = null;
+            head = null;
+
+            while (curr != null) {
+
+                if (curr.left != null) {
+                    if (prev != null)
+                        prev.next = curr.left;
+                    else
+                        head = curr.left;
+                    prev = curr.left;
+                }
+
+                if (curr.right != null) {
+                    if (prev != null)
+                        prev.next = curr.right;
+                    else
+                        head = curr.right;
+                    prev = curr.right;
+                }
+
+                curr = curr.next;
+            }
+        }
+
+        return root;
+    }
+
+
+    // populating next right pointers in each node for a non-perfect binary tree.
+    public TreeNode<Item> connectLevelRight5(TreeNode<Item> root) {
+
+        TreeNode<Item> first = null, prev = null, child = null, curr = root;
+
+        while (curr != null) {
+
+            if ((child = curr.left) != null) {
+                if (first == null)
+                    first = child;
+                else
+                    prev.next = child;
+
+                prev = child;
+            }
+
+            if ((child = curr.right) != null) {
+                if (first == null)
+                    first = child;
+                else
+                    prev.next = child;
+
+                prev = child;
+            }
+
+            if (curr.next != null)
+                curr = curr.next;
+            else {
+                curr = first;
+                first = null;
+            }
+        }
+
+        return root;
+    }
+
 
     /**
      * Unit tests the {@code FileManager} data type.
@@ -543,8 +617,7 @@ public class BinaryTree<Item> {
             StdOut.printf("%d \t", num);
         StdOut.println();
 
-
-        StdOut.println("\n>>> Testing: connectLevelRight");
+        StdOut.println("\n>>> Testing: connectLevelRight for perfect binary tree");
         TreeNode<Integer> n1_5 = new TreeNode<Integer>(1);
         TreeNode<Integer> n2_5 = new TreeNode<Integer>(2);
         TreeNode<Integer> n3_5 = new TreeNode<Integer>(3);
@@ -576,5 +649,37 @@ public class BinaryTree<Item> {
             StdOut.printf("# \t");
         }
         StdOut.println();
+
+        StdOut.println("\n>>> Testing: connectLevelRight for non-perfect binary tree");
+        TreeNode<Integer> n1_6 = new TreeNode<Integer>(1);
+        TreeNode<Integer> n2_6 = new TreeNode<Integer>(2);
+        TreeNode<Integer> n3_6 = new TreeNode<Integer>(3);
+        TreeNode<Integer> n4_6 = new TreeNode<Integer>(4);
+        TreeNode<Integer> n5_6 = new TreeNode<Integer>(5);
+        TreeNode<Integer> n7_6 = new TreeNode<Integer>(7);
+        n1_6.left = n2_6;
+        n1_6.right = n3_6;
+        n2_6.left = n4_6;
+        n2_6.right = n5_6;
+        n3_6.right = n7_6;
+
+        TreeNode<Integer> newRoot4 = bt2.connectLevelRight5(n1_6);
+        LinkedStack<TreeNode<Integer>> stack2 = new LinkedStack<>();
+        stack2.push(newRoot4);
+        while (!stack2.isEmpty()) {
+            TreeNode<Integer> currNode = stack2.pop();
+
+            if (currNode.left != null)
+                stack2.push(currNode.left);
+
+            StdOut.printf("%d \t", currNode.val);
+            while (currNode.next != null) {
+                currNode = currNode.next;
+                StdOut.printf("%d \t", currNode.val);
+            }
+            StdOut.printf("# \t");
+        }
+        StdOut.println();
+
     }
 }

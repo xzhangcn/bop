@@ -507,6 +507,70 @@ public class BinaryTree<Item> {
         return root;
     }
 
+    public TreeNode<Item> lowestCommonAncestor(TreeNode<Item> root, TreeNode<Item> p,
+                                               TreeNode<Item> q) {
+        // found p or q or touch the ground
+        if (root == null || root.equals(p) || root.equals(q))
+            return root;
+
+        // search p and q from left and right
+        TreeNode<Item> left = lowestCommonAncestor(root.left, p, q);
+        TreeNode<Item> right = lowestCommonAncestor(root.right, p, q);
+
+        // from root's left & right we found both p and q, so root is the LCA
+        if (left != null && right != null)
+            return root;
+
+        // left is not null means from left's left & right we found both q and q
+        // so left is the LCA, otherwise, right is the answer
+        return left != null ? left : right;
+    }
+
+    // iterative version
+    // it is based on the classical iterative in-order traversal
+    // (the code below the popped node is where we place our in-order processing).
+    //
+    // When we found p or q, we update the ancestor and ancestor level
+    // variables for the found node (2nd if).
+    // The ancestor level corresponds to the stack size.
+    //
+    // We update again those variables if we traverse a node that is an
+    // ancestor of the stored ancestor (1st if).
+    // We know it is an ancestor because it's level is less than the stored level.
+    //
+    // We continue the traversal until we meet the other node (p or q).
+    // If we have a stored successor, we stop the traversal
+    // (break in the 2nd if) and return it.
+    public TreeNode<Item> lowestCommonAncestor2(TreeNode<Item> root, TreeNode<Item> p,
+                                                TreeNode<Item> q) {
+        LinkedStack<TreeNode<Item>> stack = new LinkedStack<>();
+        TreeNode<Item> ancestor = null;
+        int ancestorLevel = -1;
+        TreeNode<Item> node = root;
+
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+
+            root = stack.pop();
+            if (stack.size() < ancestorLevel) {
+                ancestor = root;
+                ancestorLevel = stack.size();
+            }
+
+            if (root.val.equals(p.val) || root.val.equals(q.val)) {
+                if (ancestor != null)
+                    break;
+
+                ancestor = root;
+                ancestorLevel = stack.size();
+            }
+            node = root.right;
+        }
+        return ancestor;
+    }
 
     /**
      * Unit tests the {@code FileManager} data type.
@@ -680,6 +744,12 @@ public class BinaryTree<Item> {
             StdOut.printf("# \t");
         }
         StdOut.println();
+
+        StdOut.println("\n>>> Testing: lowestCommonAncestor");
+        TreeNode<Integer> node = bt2.lowestCommonAncestor2(n1_6, n4_6, n5_6);
+        if (node != null)
+            StdOut.printf("The lowest common ancestor between %d and %d is %d \n", n4_6.val,
+                          n5_6.val, node.val);
 
     }
 }

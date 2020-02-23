@@ -1,10 +1,7 @@
-import edu.princeton.cs.algs4.StdOut;
-
 /******************************************************************************
  * created:    2020/02/22
  * Compilation:  javac-algs4 Minesweeper.java
  * Execution:    java-algs4 Minesweeper
- * Dependencies: StdOut.java
  *
  * Minesweeper is a 1960s era video game played on an m-by-n grid of cells. The goal is to deduce
  * which cells contain hidden mines using clues about the number of mines in neighboring cells.
@@ -51,8 +48,6 @@ public class Minesweeper {
 
         for (int i = 0; i < this.mines; i++)
             grid[indices[i]] = 1;   // indicated by a value of 1, if a cell contains a mine
-
-        // showMineGrid();
     }
 
     /**
@@ -107,9 +102,44 @@ public class Minesweeper {
      */
     private void show(int[] a) {
         for (int i = 0; i < a.length; i++) {
-            StdOut.printf("%d \t", a[i]);
+            System.out.printf("%d \t", a[i]);
         }
-        StdOut.println();
+        System.out.println();
+    }
+
+    /**
+     * count the number of mines adjacent to the position (x, y)
+     *
+     * @param x horizontal coordinate of the point
+     * @param y vertical coordinate of the point
+     * @return the number of mines adjacent
+     */
+    private int countMines(int x, int y) {
+        int adjMines = 0;
+        for (int i = Math.max(x - 1, 0); i <= Math.min(x + 1, this.rows - 1); i++) {
+            for (int j = Math.max(y - 1, 0); j <= Math.min(y + 1, this.cols - 1); j++) {
+                if (this.grid[i * this.cols + j] == 1)
+                    adjMines++;
+            }
+        }
+
+        return adjMines;
+    }
+
+    /**
+     * A better way to show the grid with mines.
+     */
+    public void showGrid() {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                if (this.grid[i * this.cols + j] == 1)
+                    System.out.printf("%s  ", "*");
+                else
+                    System.out.printf("%d  ", countMines(i, j));
+            }
+
+            System.out.println();
+        }
     }
 
     /**
@@ -171,5 +201,7 @@ public class Minesweeper {
 
         Minesweeper ms = new Minesweeper(m, n, k);
         ms.showMineGrid();
+        System.out.println();
+        ms.showGrid();
     }
 }

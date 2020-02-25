@@ -1,7 +1,8 @@
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -47,7 +48,7 @@ public class MineSweeperGame extends JFrame {
     public static final Font FONT_NUMBERS = new Font("Monospaced", Font.BOLD, 20);
 
     // mine cells for user interaction. Use one dimensional array to represent two dimensional grid
-    private MineCell lblCells[] = new MineCell[ROWS * COLS];
+    private MineCell btnCells[] = new MineCell[ROWS * COLS];
 
     // number of mines in this game. Can vary to control the difficulty level.
     private int numMines;
@@ -58,8 +59,12 @@ public class MineSweeperGame extends JFrame {
     public MineSweeperGame(int numMines) {
         this.numMines = numMines;
 
-        Container cp = this.getContentPane();               // JFrame's content-pane
-        cp.setLayout(new GridLayout(ROWS, COLS, 2, 2));     // in 10x10 GridLayout
+        // Container cp = this.getContentPane();               // JFrame's content-pane
+        // cp.setLayout(new GridLayout(ROWS, COLS, 2, 2));     // in 10x10 GridLayout
+        JPanel cp = new JPanel(new GridLayout(ROWS, COLS, 2, 2));
+
+        // "this" JFrame sets its content-pane to a JPanel directly
+        setContentPane(cp);
 
         // allocate a common instance of listener as the MouseEvent listener for all the JLabels
         CellMouseListener listener = new CellMouseListener();
@@ -68,11 +73,11 @@ public class MineSweeperGame extends JFrame {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 int pos = row * COLS + col;
-                lblCells[pos] = new MineCell(row, col);
-                cp.add(lblCells[pos]);
+                btnCells[pos] = new MineCell(row, col);
+                cp.add(btnCells[pos]);
 
                 // add MouseEvent listener to process the left/right mouse-click
-                lblCells[pos].addMouseListener(listener);
+                btnCells[pos].addMouseListener(listener);
             }
         }
 
@@ -102,13 +107,13 @@ public class MineSweeperGame extends JFrame {
             for (int col = 0; col < COLS; col++) {
                 // Set all cells to un-revealed
                 int pos = row * COLS + col;
-                lblCells[pos].setEnabled(true);     // enable label
-                lblCells[pos].setForeground(FGCOLOR_NOT_REVEALED);
-                lblCells[pos].setBackground(BGCOLOR_NOT_REVEALED);
-                lblCells[pos].setFont(FONT_NUMBERS);
-                lblCells[pos].setText("");          // display blank
-                lblCells[pos].setHasMine(false);    // clear all the mines
-                lblCells[pos].setHasFlag(false);    // clear all the flags
+                btnCells[pos].setEnabled(true);     // enable label
+                btnCells[pos].setForeground(FGCOLOR_NOT_REVEALED);
+                btnCells[pos].setBackground(BGCOLOR_NOT_REVEALED);
+                btnCells[pos].setFont(FONT_NUMBERS);
+                btnCells[pos].setText("");          // display blank
+                btnCells[pos].setHasMine(false);    // clear all the mines
+                btnCells[pos].setHasFlag(false);    // clear all the flags
             }
         }
 
@@ -131,12 +136,12 @@ public class MineSweeperGame extends JFrame {
         shuffle(indices);
 
         for (int i = 0; i < this.numMines; i++)
-            this.lblCells[indices[i]].setHasMine(true);
+            this.btnCells[indices[i]].setHasMine(true);
 
         // calculate the adjacent mines
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                MineCell curr = this.lblCells[i * COLS + j];
+                MineCell curr = this.btnCells[i * COLS + j];
                 if (!curr.isHasMine())
                     curr.setAdjMines(countMines(i, j));
             }
@@ -154,7 +159,7 @@ public class MineSweeperGame extends JFrame {
         int adjMines = 0;
         for (int i = Math.max(x - 1, 0); i <= Math.min(x + 1, ROWS - 1); i++) {
             for (int j = Math.max(y - 1, 0); j <= Math.min(y + 1, COLS - 1); j++) {
-                if (this.lblCells[i * COLS + j].isHasMine())
+                if (this.btnCells[i * COLS + j].isHasMine())
                     adjMines++;
             }
         }
@@ -189,12 +194,28 @@ public class MineSweeperGame extends JFrame {
     }
 
     /**
-     * the entry method
+     * the entry method.
+     * <p>
+     * Note: javax.swing.SwingUtilities.invokeLater() is a cover for java.awt.EventQueue.invokeLater()
+     * (which is used in the NetBeans' Visual GUI Builder).
+     * <p>
+     * At times, for example in game programming, the constructor or the main() may contains non-GUI
+     * codes. Hence, it is a common practice to create a dedicated method called initComponents()
+     * (used in NetBeans visual GUI builder) or createAndShowGUI() (used in Swing tutorial) to
+     * handle all the GUI codes (and another method called initGame() to handle initialization of
+     * the game's objects). This GUI init method shall be run in the event-dispatching thread.
      *
      * @param args
      */
     public static void main(String[] args) {
-        MineSweeperGame msg = new MineSweeperGame(16);
+
+        // run GUI codes in Event-Dispatching thread for thread-safety
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MineSweeperGame(16);    // let the constructor do the job
+            }
+        });
     }
 
     // define the Listener inner Class used for all cells' MouseEvent listener
@@ -212,7 +233,7 @@ public class MineSweeperGame extends JFrame {
             boolean found = false;
             for (int row = 0; row < ROWS && !found; ++row) {
                 for (int col = 0; col < COLS && !found; ++col) {
-                    if (source.equals(lblCells[row * COLS + col])) {
+                    if (source.equals(btnCells[row * COLS + col])) {
                         rowSelected = row;
                         colSelected = col;
                         found = true;   // break both inner and outer loops

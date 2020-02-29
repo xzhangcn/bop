@@ -142,9 +142,15 @@ public class MineSweeperGame extends JFrame {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 MineCell curr = this.btnCells[i * COLS + j];
-                if (!curr.isHasMine())
-                    curr.setAdjMines(countMines(i, j));
+                if (!curr.isHasMine()) {
+                    int count = countMines(i, j);
+                    curr.setAdjMines(count);
+                    System.out.printf("%d\t", count);
+                }
+                else
+                    System.out.print("\t");
             }
+            System.out.println();
         }
     }
 
@@ -205,7 +211,7 @@ public class MineSweeperGame extends JFrame {
      * handle all the GUI codes (and another method called initGame() to handle initialization of
      * the game's objects). This GUI init method shall be run in the event-dispatching thread.
      *
-     * @param args
+     * @param args command line arguments
      */
     public static void main(String[] args) {
 
@@ -216,6 +222,62 @@ public class MineSweeperGame extends JFrame {
                 new MineSweeperGame(16);    // let the constructor do the job
             }
         });
+    }
+
+    /**
+     * @param x horizontal index
+     * @param y vertical index
+     */
+    private void updateGrid(int x, int y) {
+        int pos = x * COLS + y;
+        MineCell curr = this.btnCells[pos];
+
+        // if you hit a mine, game over;
+        // otherwise, reveal the cell and display the number of surrounding mines
+        if (curr.isHasMine()) {
+            JOptionPane.showMessageDialog(null, "Game Over!");
+            return;
+        }
+
+        int count = curr.getAdjMines();
+        if (count > 0) {
+            curr.setRevealed(true);
+            curr.setForeground(FGCOLOR_REVEALED);
+            curr.setBackground(BGCOLOR_REVEALED);
+            curr.setText(count + "");  // display adjacent mines
+        }
+        else {
+            updateAround(x, y);
+        }
+    }
+
+    /**
+     * Recursively update the mine grid when adjacent mine is 0
+     *
+     * @param x horizontal index
+     * @param y vertical index
+     */
+    private void updateAround(int x, int y) {
+        int pos = x * COLS + y;
+        MineCell curr = this.btnCells[pos];
+        int count = curr.getAdjMines();
+
+        if (!curr.isRevealed() && !curr.isHasMine()) {
+            curr.setRevealed(true);
+            curr.setForeground(FGCOLOR_REVEALED);
+            curr.setBackground(BGCOLOR_REVEALED);
+
+            if (count == 0) {
+                curr.setText("");         // display empty text
+                for (int i = Math.max(x - 1, 0); i <= Math.min(i + 1, ROWS - 1); i++) {
+                    for (int j = Math.max(y - 1, 0); j <= Math.min(j + 1, COLS - 1); j++)
+                        updateAround(i, j);
+                }
+            }
+            else {
+                curr.setText(count + "");  // display adjacent mines
+            }
+        }
     }
 
     // define the Listener inner Class used for all cells' MouseEvent listener
@@ -231,8 +293,8 @@ public class MineSweeperGame extends JFrame {
 
             // scan all rows and columns, and match with the source object
             boolean found = false;
-            for (int row = 0; row < ROWS && !found; ++row) {
-                for (int col = 0; col < COLS && !found; ++col) {
+            for (int row = 0; row < ROWS && !found; row++) {
+                for (int col = 0; col < COLS && !found; col++) {
                     if (source.equals(btnCells[row * COLS + col])) {
                         rowSelected = row;
                         colSelected = col;
@@ -243,28 +305,19 @@ public class MineSweeperGame extends JFrame {
 
             // left click to reveal a cell; right-click to plant orremove the flag.
             if (e.getButton() == MouseEvent.BUTTON1) {          // left-button clicked
-                // if you hit a mine, game over;
-                // otherwise, reveal the cell and display the number of surrounding mines
-                if (source.isHasMine())
-                    JOptionPane.showMessageDialog(null, "Game Over!");
-                else {
-                    source.setRevealed(true);
-                    source.setForeground(FGCOLOR_REVEALED);
-                    source.setBackground(BGCOLOR_REVEALED);
-                    source.setText(source.getAdjMines() + "");  // display adjacent mines
-                }
+                updateGrid(rowSelected, colSelected);
             }
             else if (e.getButton() == MouseEvent.BUTTON3) {     // right-button clicked
                 // if the location is flagged, remove the flag;
                 // otherwise, plant a flag.
                 if (source.isHasFlag()) {
                     source.setHasFlag(false);
-                    source.setText("");  // display adjacent mines
+                    source.setText("");
                     numFlags--;
                 }
                 else {
                     source.setHasFlag(true);
-                    source.setText("X");  // display adjacent mines
+                    source.setText("X");
                     numFlags++;
                 }
             }

@@ -1,11 +1,15 @@
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -59,20 +63,32 @@ public class MineSweeperGame extends JFrame {
     // number of mines in this game. Can vary to control the difficulty level.
     private int numMines;
 
-    // number of mines in this game. Can use to check if win or not
+    // number of mines flagged in this game. Can use to check if win or not
     private int numFlags;
+
+    private JTextField statusTF;
 
     public MineSweeperGame(int numMines) {
         this.numMines = numMines;
 
         setJMenuBar(createMenuBar());
 
-        // Container cp = this.getContentPane();               // JFrame's content-pane
-        // cp.setLayout(new GridLayout(ROWS, COLS, 2, 2));     // in 10x10 GridLayout
-        JPanel cp = new JPanel(new GridLayout(ROWS, COLS, 2, 2));
+        Container cp = this.getContentPane();               // JFrame's content-pane
+        cp.setLayout(new BorderLayout());
+
+        JPanel minePanel = new JPanel(new GridLayout(ROWS, COLS, 2, 2));
+        cp.add(minePanel, BorderLayout.CENTER);
+
+        // add the panel for the status bar showing the total and remaining mines
+        JPanel statusPanel = new JPanel(new BorderLayout());
+        statusTF = new JTextField(this.numMines + " mines in total; ");
+        statusTF.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 15));
+        statusTF.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));
+        statusPanel.add(statusTF);
+        cp.add(statusPanel, BorderLayout.SOUTH);
 
         // "this" JFrame sets its content-pane to a JPanel directly
-        setContentPane(cp);
+        // setContentPane(cp);
 
         // allocate a common instance of listener as the MouseEvent listener for all the JLabels
         CellMouseListener listener = new CellMouseListener();
@@ -82,7 +98,7 @@ public class MineSweeperGame extends JFrame {
             for (int col = 0; col < COLS; col++) {
                 int pos = row * COLS + col;
                 btnCells[pos] = new MineCell(row, col);
-                cp.add(btnCells[pos]);
+                minePanel.add(btnCells[pos]);
 
                 // add MouseEvent listener to process the left/right mouse-click
                 btnCells[pos].addMouseListener(listener);
@@ -122,11 +138,14 @@ public class MineSweeperGame extends JFrame {
                 btnCells[pos].setText("");          // display blank
                 btnCells[pos].setHasMine(false);    // clear all the mines
                 btnCells[pos].setHasFlag(false);    // clear all the flags
+                btnCells[pos].setRevealed(false);
             }
         }
 
         // randomly generated mine grid for each game.
         initGrid();
+
+        this.statusTF.setText(numMines + " mines in total; ");
     }
 
     /**
@@ -134,6 +153,8 @@ public class MineSweeperGame extends JFrame {
      * mines for each cell that is not a mine.
      */
     private void initGrid() {
+        System.out.println("\ninit the grid");
+
         int size = ROWS * COLS;
         int[] indices = new int[size];
 
@@ -153,12 +174,13 @@ public class MineSweeperGame extends JFrame {
                 if (!curr.isHasMine()) {
                     int count = countMines(i, j);
                     curr.setAdjMines(count);
-                    // System.out.printf("%d\t", count);
+                    System.out.printf("%d\t", count);
                 }
-                // else System.out.print("\t");
+                else System.out.print("\t");
             }
-            // System.out.println();
+            System.out.println();
         }
+
     }
 
     private JMenuBar createMenuBar() {
@@ -292,6 +314,7 @@ public class MineSweeperGame extends JFrame {
             curr.setText(count + "");  // display adjacent mines
         }
         else {
+            System.out.println("Recursively update around");
             updateAround(x, y);
         }
     }
@@ -359,11 +382,25 @@ public class MineSweeperGame extends JFrame {
                     source.setHasFlag(false);
                     source.setText("");
                     numFlags--;
+
+                    StringBuilder statusText = new StringBuilder(numMines + " mines in total; ");
+                    if (numFlags == 1)
+                        statusText.append(numFlags + " mine being marked");
+                    else
+                        statusText.append(numFlags + " mines being marked");
+                    statusTF.setText(statusText.toString());
                 }
                 else {
                     source.setHasFlag(true);
                     source.setText("X");
                     numFlags++;
+
+                    StringBuilder statusText = new StringBuilder(numMines + " mines in total; ");
+                    if (numFlags == 1)
+                        statusText.append(numFlags + " mine being marked");
+                    else
+                        statusText.append(numFlags + " mines being marked");
+                    statusTF.setText(statusText.toString());
                 }
             }
 

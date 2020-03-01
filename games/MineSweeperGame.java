@@ -1,4 +1,7 @@
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -6,6 +9,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -58,6 +64,8 @@ public class MineSweeperGame extends JFrame {
 
     public MineSweeperGame(int numMines) {
         this.numMines = numMines;
+
+        setJMenuBar(createMenuBar());
 
         // Container cp = this.getContentPane();               // JFrame's content-pane
         // cp.setLayout(new GridLayout(ROWS, COLS, 2, 2));     // in 10x10 GridLayout
@@ -145,12 +153,48 @@ public class MineSweeperGame extends JFrame {
                 if (!curr.isHasMine()) {
                     int count = countMines(i, j);
                     curr.setAdjMines(count);
-                    System.out.printf("%d\t", count);
+                    // System.out.printf("%d\t", count);
                 }
-                else
-                    System.out.print("\t");
+                // else System.out.print("\t");
             }
-            System.out.println();
+            // System.out.println();
+        }
+    }
+
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        MenuItemListener menuItemListener = new MenuItemListener();
+
+        JMenu menu = new JMenu("Game");
+        menu.setMnemonic(KeyEvent.VK_A);
+        menuBar.add(menu);
+
+        JMenuItem menuItemStart = new JMenuItem("Start", KeyEvent.VK_S);
+        // menuItemStart.setMnemonic(KeyEvent.VK_S);
+        menu.add(menuItemStart);
+        menuItemStart.addActionListener(menuItemListener);
+
+        JMenuItem menuItemReset = new JMenuItem("Reset", KeyEvent.VK_R);
+        // menuItemReset.setMnemonic(KeyEvent.VK_R);
+        menu.add(menuItemReset);
+        menuItemReset.addActionListener(menuItemListener);
+
+        return menuBar;
+    }
+
+    class MenuItemListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JMenuItem source = (JMenuItem) (e.getSource());
+            switch (source.getText()) {
+                case "Start":
+                    // JOptionPane.showMessageDialog(null, "Start a new game");
+                    initGame();
+                    break;
+                case "Reset":
+                    // JOptionPane.showMessageDialog(null, "Reset the game");
+                    initGame();
+                    break;
+            }
         }
     }
 
@@ -236,6 +280,7 @@ public class MineSweeperGame extends JFrame {
         // otherwise, reveal the cell and display the number of surrounding mines
         if (curr.isHasMine()) {
             JOptionPane.showMessageDialog(null, "Game Over!");
+            initGame();
             return;
         }
 

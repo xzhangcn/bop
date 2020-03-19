@@ -1,6 +1,10 @@
 /**
  * created:    2020/03/18
  * <p>
+ * Monte Carlo simulation.
+ *
+ * Gambler's ruin simulation.
+ * 
  * Simulate a gambler who starts with $stake and place fair $1 bets until she goes broke or reaches goal.
  * Keep track of the number of times she wins and the number of bets she makes.
  * Run the experiment $trial times, average the results and print them out.

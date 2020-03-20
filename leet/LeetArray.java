@@ -1,8 +1,4 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeSet;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 /**
  * created:    2020/03/18
@@ -395,6 +391,239 @@ public class LeetArray {
     }
 
     /**
+     * Problem 5: Single number
+     * <p>
+     * Given a non-empty array of integers, every element appears twice except for one. Find that single one.
+     *
+     * Note:
+     * Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+     *
+     * <p>
+     * Time complexity : O(n). We only iterate through the array.
+     * Space complexity : O(1). Only one element being added into the set.
+     *
+     * @param nums the array
+     * @return the single number
+     */
+    public int singleNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+
+        for (int num : nums) {
+            if (set.contains(num))
+                set.remove(num);
+            else
+                set.add(num);
+        }
+
+        Iterator iterator = set.iterator();
+
+        return (Integer) iterator.next();
+    }
+
+    // Approach 2 for the problem above
+    // Bit manipulation.
+    // If we take XOR of zero and some bit, it will return that bit;
+    // If we take XOR of two same bits, it will return 0.
+    // we can XOR all bits together to find the unique number.
+    public int singleNumber2(int[] nums) {
+        int a = 0;
+        for (int num : nums) {
+            a ^= num;
+
+            System.out.printf("TRACE: a = %d\n", a);
+        }
+        return a;
+    }
+
+    /**
+     * Problem 6: Intersection of two arrays II
+     * Approach 1: Use HashMap
+     *
+     * <p>
+     * Given two arrays, write a function to compute their intersection.
+     *
+     * Note:
+     * Each element in the result should appear as many times as it shows in both arrays.
+     * The result can be in any order.
+     *
+     * @param nums1 array one
+     * @param nums2 array two
+     * @return the intersection
+     */
+    public int[] intersect(int[] nums1, int[] nums2) {
+
+        Map<Integer, Integer> map1 = new HashMap<>();
+        Map<Integer, Integer> map2 = new HashMap<>();
+
+        for (int num : nums1) {
+            if (map1.containsKey(num))
+                map1.put(num, map1.get(num) + 1);
+            else
+                map1.put(num, 1);
+        }
+
+        for (int num : nums2) {
+            if (map2.containsKey(num))
+                map2.put(num, map2.get(num) + 1);
+            else
+                map2.put(num, 1);
+        }
+
+        List<Integer> list = new ArrayList<>();     // store the result
+
+        for (Map.Entry<Integer, Integer> entry : map1.entrySet()) {
+            int key = entry.getKey();
+            if (map2.containsKey(key)) {
+                int value = Math.min(map1.get(key), map2.get(key));
+                for (int i = 0; i < value; i++)
+                    list.add(key);
+            }
+        }
+
+        int[] a = new int[list.size()];
+        for (int i = 0; i < list.size(); i++)
+            a[i] = list.get(i);
+
+        return a;
+    }
+
+    // Same approach as above, but more concise code
+    public int[] intersect2(int[] nums1, int[] nums2) {
+
+        ArrayList<Integer> retList = new ArrayList<>();
+        Map<Integer, Integer> map1 = new HashMap<>();
+        Map<Integer, Integer> map2 = new HashMap<>();
+
+        for (int n: nums1)
+            map1.put(n, map1.getOrDefault(n, 0) + 1);
+
+        for (int n: nums2)
+            map2.put(n, map2.getOrDefault(n, 0) + 1);
+
+        for (int key: map1.keySet()){
+            int val = Math.min(map1.getOrDefault(key, 0), map2.getOrDefault(key, 0));
+            while (val > 0) {
+                retList.add(key);
+                val--;
+            }
+        }
+
+        return retList.stream().mapToInt(i -> i).toArray();
+    }
+
+    /**
+     * Problem 7: Plus one
+     *
+     * <p>
+     * Given a non-empty array of digits representing a non-negative integer, plus one to the integer.
+     *
+     * The digits are stored such that the most significant digit is at the head of the list,
+     * and each element in the array contain a single digit.
+     *
+     * You may assume the integer does not contain any leading zero, except the number 0 itself.
+     *
+     * @param digits array of digits
+     * @return the result array
+     */
+    public int[] plusOne(int[] digits) {
+        List<Integer> list = new ArrayList<>();
+        int carry = 1;
+        int value = 0;
+        for (int i = digits.length - 1; i >= 0; i--) {
+            value = carry + digits[i];
+            if (value >= 10) {
+                list.add(value - 10);
+                carry = 1;
+            }
+            else {
+                list.add(value);
+                carry = 0;
+            }
+
+            // System.out.printf("TRACE: i = %d, carry = %d, value = %d\n", i, carry, value);
+        }
+
+        if (carry == 1)
+            list.add(carry);
+
+        int[] a = new int[list.size()];
+        int j = 0;
+        for(int i = list.size() - 1; i >= 0; i--) {
+            // System.out.println(list.get(i));
+            a[j++] = list.get(i);
+
+        }
+        return a;
+    }
+
+    /**
+     * Problem 8: Move zeros
+     *
+     * <p>
+     * Given an array $nums, write a function to move all 0's to the end of it
+     * while maintaining the relative order of the non-zero elements.
+     *
+     * Note:
+     * You must do this in-place without making a copy of the array.
+     * Minimize the total number of operations.
+     *
+     * @param nums an integer array
+     */
+    public void moveZeros(int[] nums) {
+        int k = -1;     // index position for non-zero to be inserted, and initialized to be -1.
+
+        // The algorithm below achieves the time, space and operation optimal, but it's a bit hard to understand.
+        // To understand it, you have to walk through a few test cases to see it's correct.
+        for (int i = 0; i < nums.length; i++) {
+
+            if (nums[i] != 0 && k != -1) {
+                if (i > k) {
+                    nums[k] = nums[i];      // only in this case, we need to move the non-zero element forward
+                    k++;                    // in this case, k simply increments
+                    nums[i] = 0;
+                }
+            }
+            else if (nums[i] == 0) {
+                if (k == -1)                // only in this case, k jumps to the current position
+                    k = i;
+                // else k++;
+            }
+
+            if (k != -1)
+                System.out.printf("TRACE: i = %d, k = %d, nums[i] = %d, nums[k] = %d\n", i, k, nums[i], nums[k]);
+        }
+    }
+
+    // Another approach to the problem above.
+    // Although both time and space are optimal. However, the total number of operations are not optimal (when all elements are non zeros).
+    // But this approach is easier to follow.
+    public void moveZeros2(int[] nums) {
+        int lastNonZeroFoundAt = 0;
+
+        // This algorithm below will maintain the following invariant:
+        // 1. All elements before the slow pointer (lastNonZeroFoundAt) are non-zeroes.
+        // 2. All elements between the current and slow pointer are zeroes.
+        for (int cur = 0; cur < nums.length; cur++) {
+            if (nums[cur] != 0) {
+                swap(nums, lastNonZeroFoundAt, cur);
+                lastNonZeroFoundAt++;
+            }
+        }
+    }
+
+    /**
+     * Swap the elements in an array
+     * @param nums an integer array
+     * @param first index at which array element will be swapped
+     * @param second another index at which array element will be swapped with
+     */
+    private void swap(int[] nums, int first, int second) {
+        int temp = nums[first];
+        nums[first] = nums[second];
+        nums[second] = temp;
+    }
+
+    /**
      * Print the array for a given length
      *
      * @param nums an integer array
@@ -452,5 +681,30 @@ public class LeetArray {
         int[] nums_04_03 = {2147483647,-2147483647};
         System.out.printf("Does the array contain nearby almost duplicate? %b\n", leetArray.containsNearbyAlmostDuplicate3(nums_04_03, 1, 2147483647));
 
+        System.out.println("\n>>> Problem 5: Single number.");
+        // int[] nums_05 = {2, 2, 1};
+        int[] nums_05 = {4, 1, 2, 1, 2};
+        System.out.printf("The single number in the array is %d.\n", leetArray.singleNumber2(nums_05));
+
+        System.out.println("\n>>> Problem 6: Intersection of two arrays II.");
+        // int[] nums_06_01 = {1, 2, 2, 1};
+        // int[] nums_06_02 = {2, 2};
+        int[] nums_06_01 = {4, 9, 5};
+        int[] nums_06_02 = {9, 4, 9, 8, 4};
+        int[] result_06 = leetArray.intersect2(nums_06_01, nums_06_02);
+        leetArray.printArray(result_06, result_06.length);
+
+        System.out.println("\n>>> Problem 7: Plus one.");
+        int[] nums_07 = {1, 2, 3};
+        // int[] nums_07 = {9};
+        int[] result_07 = leetArray.plusOne(nums_07);
+        leetArray.printArray(result_07, result_07.length);
+
+        System.out.println("\n>>> Problem 8: Move zeros.");
+        int[] nums_08 = {0, 1, 0, 3, 12};
+        // int[] nums_08 = {1, 2};
+        // int[] nums_08 = {1, 0, 1};
+        leetArray.moveZeros2(nums_08);
+        leetArray.printArray(nums_08, nums_08.length);
     }
 }

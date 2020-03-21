@@ -108,7 +108,7 @@ public class LeetArray {
         int profit = 0;
         for (int i = 1; i < prices.length; i++) {
             if (prices[i] > prices[i - 1])
-                profit += (prices[i] - prices[i-1]);
+                profit += (prices[i] - prices[i - 1]);
         }
 
         return profit;
@@ -127,7 +127,7 @@ public class LeetArray {
      * Space complexity : O(1). No extra space is used.
      *
      * @param nums the array
-     * @param k steps to be rotated right
+     * @param k    steps to be rotated right
      */
     public void rotate(int[] nums, int k) {
         int len = nums.length;
@@ -156,7 +156,7 @@ public class LeetArray {
      * Space complexity : O(1). Another array of the same size is used.
      *
      * @param nums the array
-     * @param k steps to be rotated right
+     * @param k    steps to be rotated right
      */
     public void rotate2(int[] nums, int k) {
         int len = nums.length;
@@ -178,7 +178,7 @@ public class LeetArray {
      * Space complexity : O(1). Constant extra space is used.
      *
      * @param nums the array
-     * @param k steps to be rotated right
+     * @param k    steps to be rotated right
      */
     public void rotate3(int[] nums, int k) {
         int len = nums.length;
@@ -215,7 +215,7 @@ public class LeetArray {
      * Space complexity : O(1). No extra space is used.
      *
      * @param nums the array
-     * @param k steps to be rotated right
+     * @param k    steps to be rotated right
      */
     public void rotate4(int[] nums, int k) {
         int len = nums.length;
@@ -226,12 +226,11 @@ public class LeetArray {
     }
 
     /**
-     *
      * Reverse an array from start index to end index
      *
-     * @param nums an integer array
+     * @param nums  an integer array
      * @param start start array index
-     * @param end end array index
+     * @param end   end array index
      */
     public void reverse(int[] nums, int start, int end) {
         int len = nums.length;
@@ -279,7 +278,7 @@ public class LeetArray {
      * such that nums[i] = nums[j] and the absolute difference between i and j is at most k.
      *
      * @param nums the array
-     * @param k the distance between indices
+     * @param k    the distance between indices
      */
     public boolean containsNearbyDuplicate(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();
@@ -301,8 +300,8 @@ public class LeetArray {
      * such that the absolute difference between nums[i] and nums[j] is at most t and the absolute difference between i and j is at most k.
      *
      * @param nums the array
-     * @param k the distance between indices at most
-     * @param t the difference between two element at most
+     * @param k    the distance between indices at most
+     * @param t    the difference between two element at most
      * @return true if contains nearby almost duplicate, false otherwise
      */
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
@@ -332,11 +331,11 @@ public class LeetArray {
     // Just use while loop to replace for loop.
     public boolean containsNearbyAlmostDuplicate2(int[] nums, int k, int t) {
 
-        for(int i = 0; i <= nums.length - 2; i++) {
+        for (int i = 0; i <= nums.length - 2; i++) {
 
             int j = i + 1;
-            while(j - i <= k && j < nums.length) {
-                if(Math.abs((long)nums[i] - (long)nums[j]) <= t)
+            while (j - i <= k && j < nums.length) {
+                if (Math.abs((long) nums[i] - (long) nums[j]) <= t)
                     return true;
 
                 j++;
@@ -348,20 +347,20 @@ public class LeetArray {
 
     /**
      * Approach 3: sliding window + tree set
-     *
+     * <p>
      * Maintain the tree set in such a way that it always contains k elements and slide them accordingly
      * (remove 1st element when we reach size >= k, etc..)
-     *
+     * <p>
      * We can use a TreeSet which offers functinos like floor and ceiling.
      * floor() returns the greatest element in this set less than or equal to the given element, or null if there is no such element.
      * ceiling() returns the least element in this set greater than or equal to the given element, or null if there is no such element.
-     *
+     * <p>
      * The fact that the absolute diff should always be utmost t means that
      * we need to check the greatest low and lowest high for all the elements.
      * If that satisfies the given condition, return true. eg: if t = 2 and nums[i] = 4,
      * for the condition to be true the greatest element smaller than 4 should be in between 2 and 4,
      * while smallest element greater than 4 should lie between 4 and 6.
-     *
+     * <p>
      * TC: O(nlogk) - as the size of tree set is always k and n is the size of the array
      */
     private static boolean containsNearbyAlmostDuplicate3(int[] nums, int k, int t) {
@@ -394,7 +393,7 @@ public class LeetArray {
      * Problem 5: Single number
      * <p>
      * Given a non-empty array of integers, every element appears twice except for one. Find that single one.
-     *
+     * <p>
      * Note:
      * Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
      *
@@ -441,7 +440,7 @@ public class LeetArray {
      *
      * <p>
      * Given two arrays, write a function to compute their intersection.
-     *
+     * <p>
      * Note:
      * Each element in the result should appear as many times as it shows in both arrays.
      * The result can be in any order.
@@ -494,13 +493,13 @@ public class LeetArray {
         Map<Integer, Integer> map1 = new HashMap<>();
         Map<Integer, Integer> map2 = new HashMap<>();
 
-        for (int n: nums1)
+        for (int n : nums1)
             map1.put(n, map1.getOrDefault(n, 0) + 1);
 
-        for (int n: nums2)
+        for (int n : nums2)
             map2.put(n, map2.getOrDefault(n, 0) + 1);
 
-        for (int key: map1.keySet()){
+        for (int key : map1.keySet()) {
             int val = Math.min(map1.getOrDefault(key, 0), map2.getOrDefault(key, 0));
             while (val > 0) {
                 retList.add(key);
@@ -516,10 +515,10 @@ public class LeetArray {
      *
      * <p>
      * Given a non-empty array of digits representing a non-negative integer, plus one to the integer.
-     *
+     * <p>
      * The digits are stored such that the most significant digit is at the head of the list,
      * and each element in the array contain a single digit.
-     *
+     * <p>
      * You may assume the integer does not contain any leading zero, except the number 0 itself.
      *
      * @param digits array of digits
@@ -534,8 +533,7 @@ public class LeetArray {
             if (value >= 10) {
                 list.add(value - 10);
                 carry = 1;
-            }
-            else {
+            } else {
                 list.add(value);
                 carry = 0;
             }
@@ -548,7 +546,7 @@ public class LeetArray {
 
         int[] a = new int[list.size()];
         int j = 0;
-        for(int i = list.size() - 1; i >= 0; i--) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             // System.out.println(list.get(i));
             a[j++] = list.get(i);
 
@@ -562,7 +560,7 @@ public class LeetArray {
      * <p>
      * Given an array $nums, write a function to move all 0's to the end of it
      * while maintaining the relative order of the non-zero elements.
-     *
+     * <p>
      * Note:
      * You must do this in-place without making a copy of the array.
      * Minimize the total number of operations.
@@ -582,8 +580,7 @@ public class LeetArray {
                     k++;                    // in this case, k simply increments
                     nums[i] = 0;
                 }
-            }
-            else if (nums[i] == 0) {
+            } else if (nums[i] == 0) {
                 if (k == -1)                // only in this case, k jumps to the current position
                     k = i;
                 // else k++;
@@ -612,9 +609,267 @@ public class LeetArray {
     }
 
     /**
+     * Problem 9: Two sum
+     *
+     * <p>
+     * Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+     * <p>
+     * Note:
+     * You may assume that each input would have exactly one solution, and you may not use the same element twice.
+     *
+     * @param nums   an integer array
+     * @param target a specific target
+     */
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+
+        // While we iterate and inserting elements into the table, we also look back to check
+        // if current element's complement already exists in the table.
+        // If it exists, we have found a solution and return immediately.
+        for (int i = 0; i < nums.length; i++) {
+
+            if (map.containsKey(target - nums[i])) {
+                int[] a = new int[2];
+                a[0] = map.get(target - nums[i]);
+                a[1] = i;
+                return a;
+            } else
+                map.put(nums[i], i);
+        }
+
+        return null;
+    }
+
+    // Same approach as above, but rewrite the code in a more concise way
+    public int[] twoSum2(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement))
+                return new int[]{map.get(complement), i};
+            else
+                map.put(nums[i], i);
+        }
+
+        return null;
+    }
+
+    /**
+     * Problem 10: Valid Sudoku
+     *
+     * <p>
+     * Determine if a 9x9 Sudoku board is valid.
+     * The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+     * <p>
+     * Note:
+     * A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+     * Only the filled cells need to be validated according to the mentioned rules.
+     * The given board contain only digits 1-9 and the character '.'.
+     * The given board size is always 9x9.
+     *
+     * @param board a 9x9 board
+     * @return true if it's a valid Sudoku board, false otherwise
+     */
+    public boolean isValidSudoku(char[][] board) {
+        Map<Integer, Set<Integer>> mapRow = new HashMap<>();
+        Map<Integer, Set<Integer>> mapCol = new HashMap<>();
+        Map<Integer, Set<Integer>> mapGrid = new HashMap<>();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                // System.out.printf("TRACE: (%d, %d)\t", i, j);
+
+                char charValue = board[i][j];
+                if (charValue != '.') {
+                    int value = Integer.parseInt(charValue + "");
+
+                    // System.out.println(value);
+
+                    int grid = mapToGrid(i, j);
+
+                    // Row
+                    if (!mapRow.containsKey(i)) {
+                        // System.out.printf("TRACE: It's Row %d, value %d !!!\n", i, value);
+
+                        Set<Integer> setRow = new HashSet<>();
+                        setRow.add(value);
+                        mapRow.put(i, setRow);
+                    } else if (mapRow.get(i).contains(value))
+                        return false;
+                    else {
+                        Set<Integer> setRow = mapRow.get(i);
+                        setRow.add(value);
+                        mapRow.put(i, setRow);
+
+                        /*
+                        System.out.printf("Row: %d\t", i);
+                        for(int val : setRow)
+                            System.out.print(val);
+                        System.out.println();
+
+                         */
+                    }
+
+                    // Column
+                    if (!mapCol.containsKey(j)) {
+                        // System.out.printf("TRACE: It's Col %d, value %d !!!\n", j, value);
+
+                        Set<Integer> setCol = new HashSet<>();
+                        setCol.add(value);
+                        mapCol.put(j, setCol);
+                    } else if (mapCol.get(j).contains(value))
+                        return false;
+                    else {
+                        Set<Integer> setCol = mapCol.get(j);
+                        setCol.add(value);
+                        mapCol.put(j, setCol);
+
+                        /*
+                        System.out.printf("Col: %d\t", j);
+                        for(int val : setCol)
+                            System.out.print(val);
+                        System.out.println();
+
+                         */
+                    }
+
+                    // Grid
+                    if (!mapGrid.containsKey(grid)) {
+                        // System.out.printf("TRACE: It's Grid %d, value %d !!!\n", grid, value);
+
+                        Set<Integer> setGrid = new HashSet<>();
+                        setGrid.add(value);
+                        mapGrid.put(grid, setGrid);
+                    } else if (mapGrid.get(grid).contains(value))
+                        return false;
+                    else {
+                        Set<Integer> setGrid = mapGrid.get(grid);
+                        setGrid.add(value);
+                        mapGrid.put(grid, setGrid);
+
+                        /*
+                        System.out.printf("Grid: %d\t", grid);
+                        for(int val : setGrid)
+                            System.out.print(val);
+                        System.out.println();
+
+                         */
+                    }
+                }
+            }
+
+            System.out.println();
+        }
+
+        return true;
+    }
+
+    /**
+     * Map the cell to its grid number.
+     *
+     * @param row horizontal index
+     * @param col vertical index
+     * @return the grid number being mapped
+     */
+    private int mapToGrid(int row, int col) {
+        if (row >= 0 && row <= 2) {
+            if (col >= 0 && col <= 2)
+                return 0;
+            if (col >= 3 && col <= 5)
+                return 1;
+            if (col >= 6 && col <= 8)
+                return 2;
+        }
+
+        if (row >= 3 && row <= 5) {
+            if (col >= 0 && col <= 2)
+                return 3;
+            if (col >= 3 && col <= 5)
+                return 4;
+            if (col >= 6 && col <= 8)
+                return 5;
+        }
+
+        if (row >= 6 && row <= 8) {
+            if (col >= 0 && col <= 2)
+                return 6;
+            if (col >= 3 && col <= 5)
+                return 7;
+            if (col >= 6 && col <= 8)
+                return 8;
+        }
+
+        return -1;
+    }
+
+    // Another way to approach above problem.
+    // A concise and nice way.
+    public boolean isValidSudoku2(char[][] board) {
+        Set<String> seen = new HashSet<>();
+
+        // Collect the set of things we see, encoded as strings.
+        // Scream false if we ever fail to add something because it was already added (i.e., seen before).
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char number = board[i][j];
+                if (number != '.') {
+                    if (!seen.add(number + " in row " + i)
+                            || !seen.add(number + " in column " + j)
+                            || !seen.add(number + " in block " + i / 3 + "-" + j / 3))
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Problem 11: Rotate image
+     *
+     * <p>
+     * You are given an n x n 2D matrix representing an image. Rotate the image by 90 degrees (clockwise).
+     *
+     * <p>
+     * Note:
+     *
+     * You have to rotate the image in-place, which means you have to modify the input 2D matrix directly.
+     * DO NOT allocate another 2D matrix and do the rotation.
+     *
+     * @param matrix a 2D matrix
+     */
+    public void rotate(int[][] matrix) {
+
+        // Exchange the elements mirroring the backward diagonal
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = i + 1; j < matrix[0].length; j++) {
+
+                int temp =  matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+
+        // Exchange the columns mirroring the central vertical line
+        int start = 0, end = matrix[0].length - 1;
+        while (start < end) {
+            for (int i = 0; i < matrix.length; i++) {
+                int temp = matrix[i][start];
+                matrix[i][start] = matrix[i][end];
+                matrix[i][end] = temp;
+            }
+
+            start++;
+            end--;
+        }
+    }
+
+    /**
      * Swap the elements in an array
-     * @param nums an integer array
-     * @param first index at which array element will be swapped
+     *
+     * @param nums   an integer array
+     * @param first  index at which array element will be swapped
      * @param second another index at which array element will be swapped with
      */
     private void swap(int[] nums, int first, int second) {
@@ -635,6 +890,24 @@ public class LeetArray {
         for (i = 0; i < len - 1; i++)
             System.out.printf("%d, ", nums[i]);
         System.out.printf("%d]\n", nums[i]);
+    }
+
+    /**
+     * Print out a matrix
+     *
+     * @param matrix an integer matrix
+     */
+    public void printMatrix(int[][] matrix) {
+
+        for (int i = 0; i < matrix.length; i++) {
+            System.out.print("[ ");
+
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.printf("%d ", matrix[i][j]);
+            }
+
+            System.out.println("]");
+        }
     }
 
     /**
@@ -678,7 +951,7 @@ public class LeetArray {
         // int[] nums_04_03 = {1, 5, 9, 1, 5, 9};
         // int[] nums_04_03 = {1, 2, 3, 1};
         // int[] nums_04_03 = {-1, 2147483647};
-        int[] nums_04_03 = {2147483647,-2147483647};
+        int[] nums_04_03 = {2147483647, -2147483647};
         System.out.printf("Does the array contain nearby almost duplicate? %b\n", leetArray.containsNearbyAlmostDuplicate3(nums_04_03, 1, 2147483647));
 
         System.out.println("\n>>> Problem 5: Single number.");
@@ -706,5 +979,29 @@ public class LeetArray {
         // int[] nums_08 = {1, 0, 1};
         leetArray.moveZeros2(nums_08);
         leetArray.printArray(nums_08, nums_08.length);
+
+        System.out.println("\n>>> Problem 9: Two sum");
+        int[] nums_09 = {2, 7, 11, 15};
+        int target = 9;
+        int[] result_09 = leetArray.twoSum(nums_09, target);
+        leetArray.printArray(result_09, result_09.length);
+
+        System.out.println("\n>>> Problem 10: Valid Sudoku");
+        char[][] board_10 = {
+                {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+        System.out.printf("Is this a valid Sukudo board? %b\n", leetArray.isValidSudoku2(board_10));
+
+        System.out.println("\n>>> Problem 11: Rotate image");
+        int[][] matrix_11 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        leetArray.rotate(matrix_11);
+        leetArray.printMatrix(matrix_11);
     }
 }

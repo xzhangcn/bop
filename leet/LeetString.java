@@ -296,13 +296,179 @@ public class LeetString {
      * @param str a string
      */
     public int myAtoi(String str) {
+        if (str.length() == 0)
+            return 0;
+
         int rev = 0;
+        boolean isNegative = false;
 
-        for (int i = 0; i < str.length(); i++) {
+        int i = 0, len = str.length();
 
+        // Discard all leading whitespaces
+        while (i < len && str.charAt(i) == ' ')
+            i++;
+
+        if (i < len) {
+            char c = str.charAt(i);
+
+            if (c == '-') {
+                isNegative = true;  // Negative number
+                i++;
+            }
+            else if (c == '+')
+                i++;
+            else if (!Character.isDigit(str.charAt(i)))
+                return 0;           // Invalid input
         }
-        return 0;
+
+        // Keep processing the character until a non-digit
+        while (i < len && Character.isDigit(str.charAt(i))) {
+            int digit = str.charAt(i) - '0';
+
+            // overflow
+            if (!isNegative && (rev > Integer.MAX_VALUE / 10 || (rev == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)))
+                return Integer.MAX_VALUE;
+
+            // underflow
+            if (isNegative && (rev * (-1) < Integer.MIN_VALUE / 10 || (rev * (-1) == Integer.MIN_VALUE / 10 && digit * (-1) < Integer.MIN_VALUE % 10)))
+                return Integer.MIN_VALUE;
+
+            rev = rev * 10 + (str.charAt(i) - '0');
+            i++;
+        }
+
+        if (isNegative)
+            rev = rev * (-1);
+
+        return rev;
     }
+
+    /**
+     * Problem 7: Implement strStr().
+     *
+     * <p>
+     * Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+     *
+     * Clarification:
+     * What should we return when needle is an empty string? This is a great question to ask during an interview.
+     * For the purpose of this problem, we will return 0 when needle is an empty string. This is consistent to C's strstr() and Java's indexOf().
+     *
+     * @param haystack a string
+     * @param needle a string
+     * @return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+     */
+    public int strStr(String haystack, String needle) {
+        int len1 = haystack.length();
+        int len2 = needle.length();
+
+        if (len2 == 0)
+            return 0;
+
+        if (len2 > len1)
+            return -1;
+
+        for (int i = 0; i < len1; i++) {
+
+            int j;
+            for (j = 0; (i + j) < len1 && j < len2; j++) {
+
+                // System.out.printf("TRACE: i = %d, j = %d\n", i, j);
+
+                if (haystack.charAt(i + j) != needle.charAt(j))
+                    break;
+            }
+
+            if (j == needle.length())
+                return i;
+        }
+
+        return -1;
+    }
+
+    // Using KMP algorithm to solve the above problem
+    public int strStr2(String haystack, String needle) {
+        if (haystack == null || needle == null || haystack.length() < needle.length()) {
+            return -1;
+        } else if (needle.isEmpty()) {
+            return 0;
+        }
+
+        int[] lps = computeLPS(needle);
+        int i = 0;
+        int j = 0;
+
+        while (i < haystack.length()) {
+            if (needle.charAt(j) == haystack.charAt(i)) {
+                i++;
+                j++;
+                if (j == needle.length()) {
+                    return i - j;   // match found. Return location of match
+                }
+            } else {
+                if (j == 0) {
+                    i++;
+                } else {
+                    j = lps[j - 1]; // backtrack j to check previous matching prefix
+                }
+            }
+        }
+
+        return -1;  // did not find needle
+    }
+
+    // computes Longest Prefix Suffix (LPS) array
+    private int[] computeLPS(String str) {
+        int[] lps = new int[str.length()];
+        lps[0] = 0;
+        int i = 1;  // always walks forward
+        int j = 0;  // tracks prefix that matches suffix
+
+        while (i < str.length()) {
+            if (str.charAt(i) == str.charAt(j)) {
+                j++;
+                lps[i] = j;
+                i++;
+            }
+            else { // mismatch
+                if (j == 0) {   // go onto next character in string
+                    lps[i] = 0;
+                    i++;
+                }
+                else {          // backtrack j to check previous matching prefix
+                    j = lps[j - 1];
+                }
+            }
+        }
+        return lps;
+    }
+
+    /**
+     * Problem 8: Count and Say.
+     *
+     * <p>
+     * The count-and-say sequence is the sequence of integers with the first five terms as following:
+     * 1.     1
+     * 2.     11
+     * 3.     21
+     * 4.     1211
+     * 5.     111221
+     *
+     * 1 is read off as "one 1" or 11.
+     * 11 is read off as "two 1s" or 21.
+     * 21 is read off as "one 2, then one 1" or 1211.
+     *
+     * Given an integer n where 1 ≤ n ≤ 30, generate the nth term of the count-and-say sequence. You can do so recursively,
+     * in other words from the previous member read off the digits, counting the number of digits in groups of the same digit.
+     *
+     * Note: Each term of the sequence of integers will be represented as a string.
+     *
+     * @param n an integer
+     * @return nth term of the count-and-say sequence
+     */
+    public String countAndSay(int n) {
+
+    }
+
 
     /**
      * Unit test.
@@ -336,5 +502,27 @@ public class LeetString {
         // String s_05 = "race a car";
         // String s_05 = ".,";
         System.out.printf("Is this a valid palindrome? %b\n", leetString.isPalindrome(s_05));
+
+        System.out.println("\n>>> Problem 6: String to Integer (atoi).");
+        String s_06 = "42";
+        // String s_06 = "   -42";
+        // String s_06 = "4193 with words";
+        // String s_06 = "words and 987";
+        // String s_06 = "-91283472332";
+        // String s_06 = "";
+        // String s_06 = "-";
+        // String s_06 = "+1";
+        // String s_06 = "-+1";
+        System.out.printf("String \"%s\" to integer is %d\n", s_06, leetString.myAtoi(s_06));
+
+        System.out.println("\n>>> Problem 7: Implement strStr().");
+        String haystack = "hello", needle = "ll";
+        // String haystack = "aaaaa", needle = "bba";
+        // String haystack = "aaa", needle = "aaaa";
+        // String haystack = "mississippi", needle = "issipi";
+        System.out.printf("The result of strStr(%s, %s) is %d\n.", haystack, needle, leetString.strStr2(haystack, needle));
+
+        System.out.println("\n>>> Problem 8: Count and Say.");
+        System.out.printf("The %dth item of Count and Say is \"%s\"\n", 5, leetString.countAndSay(5));
     }
 }

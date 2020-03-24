@@ -1,5 +1,5 @@
 /**
- * created:    2020/03/24
+ * created:    2019/09/03
  * <p>
  * {@code ThueMorse} sequence is an infinite sequence of 0s and 1s that is constructed by starting with 0
  * and successively appending the bitwise negation (interchange 0s and 1s) of the existing sequence.
@@ -35,7 +35,7 @@ public class ThueMorse {
                 tm[i] = 1 - tm[i - 1];
         }
 
-        // print the Thue-Morse wave
+        // Print the Thue-Morse wave
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)

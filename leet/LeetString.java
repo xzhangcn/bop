@@ -466,9 +466,45 @@ public class LeetString {
      * @return nth term of the count-and-say sequence
      */
     public String countAndSay(int n) {
+        String s = "1";
 
+        for (int i = 1; i < n; i++) {
+
+            int count = 1;                              // the number of digits in groups of the same digit
+            StringBuilder sb = new StringBuilder();     // the String being built in each iteration
+
+            for (int j = 0; j < s.length(); j++) {
+                if (j + 1 == s.length() || s.charAt(j) != s.charAt(j + 1)) {    // reach to the end of the string or two consecutive digits are not the same
+                    sb.append(count).append(s.charAt(j));                       // build up the String
+                    count = 1;                                                  // reset count to 1
+                }
+                else
+                    count++;
+            }
+
+            s = sb.toString();                          // convert to String for next iteration
+        }
+
+        return s;
     }
 
+    /**
+     * Problem 9: Longest Common Prefix.
+     *
+     * <p>
+     * Write a function to find the longest common prefix string amongst an array of strings.
+     * If there is no common prefix, return an empty string "".
+     *
+     * Note:
+     * All given inputs are in lowercase letters a-z.
+     *
+     * @param strs an array of String
+     * @return the longest common prefix
+     */
+    public String longestCommonPrefix(String[] strs) {
+
+        return "";
+    }
 
     /**
      * Unit test.
@@ -523,6 +559,7 @@ public class LeetString {
         System.out.printf("The result of strStr(%s, %s) is %d\n.", haystack, needle, leetString.strStr2(haystack, needle));
 
         System.out.println("\n>>> Problem 8: Count and Say.");
-        System.out.printf("The %dth item of Count and Say is \"%s\"\n", 5, leetString.countAndSay(5));
+        int n_08 = 10;
+        System.out.printf("The %dth item of Count and Say is \"%s\"\n", n_08, leetString.countAndSay(n_08));
     }
 }

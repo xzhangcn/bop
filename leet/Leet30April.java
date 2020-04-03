@@ -48,7 +48,7 @@ public class Leet30April {
      * Problem on the day of 04/02/2020: Happy Number.
      * <p>
      * Write an algorithm to determine if a number is "happy".
-     *
+     * <p>
      * A happy number is a number defined by the following process: Starting with any positive integer,
      * replace the number by the sum of the squares of its digits, and repeat the process until the number
      * equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those
@@ -95,7 +95,7 @@ public class Leet30April {
         Set<Integer> set = new HashSet<>();     // store the sums for each iteration
 
         int squaredSum, remainder;
-        while (set.add(n)){
+        while (set.add(n)) {
             squaredSum = 0;
 
             while (n > 0) {
@@ -115,6 +115,43 @@ public class Leet30April {
     }
 
     /**
+     * Problem on the day of 04/03/2020: Maximum Subarray.
+     * <p>
+     * Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+     *
+     * <p>
+     * This problem was discussed by Jon Bentley (Sep. 1984 Vol. 27 No. 9 Communications of the ACM P885)
+     * <p>
+     * The paragraph below was copied from his paper (with a little modifications)
+     * <p>
+     * Algorithm that operates on arrays: it starts at the left end (element A[1]) and scans through to the right end (element A[n]),
+     * keeping track of the maximum sum subvector seen so far.
+     * <p>
+     * The maximum is initially A[0]. Suppose we've solved the problem for A[1 .. i - 1]; how can we extend that to A[1 .. i]?
+     * The maximum sum in the first I elements is either the maximum sum in the first i - 1 elements (which we'll call MaxSoFar),
+     * or it is that of a subvector that ends in position i (which we'll call MaxEndingHere).
+     * <p>
+     * MaxEndingHere is either A[i] plus the previous MaxEndingHere, or just A[i], whichever is larger.
+     *
+     * <p>
+     * Follow up:
+     * If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+     *
+     * @param nums an integer array
+     * @return the largest sum of a contiguous subarray
+     */
+    public int maxSubArray(int[] nums) {
+        int maxSoFar = nums[0], maxEndingHere = nums[0];
+
+        for (int i = 1; i < nums.length; ++i) {
+            maxEndingHere = Math.max(maxEndingHere + nums[i], nums[i]);
+            maxSoFar = Math.max(maxSoFar, maxEndingHere);
+        }
+
+        return maxSoFar;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -129,6 +166,10 @@ public class Leet30April {
         System.out.println("\n>>> Problem on the day of 04/02/2020: Happy Number.");
         int p2_n = 19;
         System.out.printf("Is %d a happy number? %b\n", p2_n, leet30April.isHappy2(p2_n));
+
+        System.out.println("\n>>> Problem on the day of 04/03/2020: Maximum Subarray.");
+        int[] p3_nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+        System.out.printf("The largest sum of contiguous sub-array is %d\n", leet30April.maxSubArray(p3_nums));
     }
 
 }

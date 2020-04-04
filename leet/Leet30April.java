@@ -152,6 +152,86 @@ public class Leet30April {
     }
 
     /**
+     * Problem on the day of 04/04/2020: Move Zeros.
+     * <p>
+     * Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+     * <p>
+     * Note:
+     *
+     * You must do this in-place without making a copy of the array.
+     * Minimize the total number of operations.
+     *
+     * @param nums an integer array
+     */
+    public void moveZeroes(int[] nums) {
+        int k = -1;     // index position for non-zero to be inserted
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0 && k != -1) {
+                if (i > k) {
+                    nums[k] = nums[i];
+                    k++;
+                    nums[i] = 0;
+                }
+            }
+            else if (nums[i] == 0) {
+                if (k == -1)
+                    k = i;
+                // else k++;
+            }
+        }
+    }
+
+    // Another approach to the above proglem
+    // (Space Optimal, Operation Sub-Optimal)
+    public void moveZeroes2(int[] nums) {
+        int lastNonZeroFoundAt = 0;
+        // If the current element is not 0, then we need to
+        // append it just after the last found non zero element.
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                nums[lastNonZeroFoundAt] = nums[i];
+                lastNonZeroFoundAt++;
+            }
+        }
+        // After we have finished processing new elements,
+        // all the non-zero elements are already at beginning of array.
+        // We just need to fill remaining array with 0's.
+        for (int i = lastNonZeroFoundAt; i < nums.length; i++) {
+            nums[i] = 0;
+        }
+    }
+
+    // Improvement on the solution above
+    void moveZeroes3(int[] nums) {
+        // The code will maintain the following invariant:
+        //    1. All elements before the slow pointer (lastNonZeroFoundAt) are non-zeroes.
+        //    2. All elements between the current and slow pointer are zeroes.
+        // Therefore, when we encounter a non-zero element, we need to swap elements pointed by current and slow pointer,
+        // then advance both pointers. If it's zero element, we just advance current pointer.
+        //With this invariant in-place, it's easy to see that the algorithm will work.
+
+        for (int lastNonZeroFoundAt = 0, cur = 0; cur < nums.length; cur++) {
+            if (nums[cur] != 0) {
+                swap(nums, lastNonZeroFoundAt, cur);
+                lastNonZeroFoundAt++;
+            }
+        }
+    }
+
+    /**
+     * Swap the elements in an array
+     *
+     * @param nums   an integer array
+     * @param first  index at which array element will be swapped
+     * @param second another index at which array element will be swapped with
+     */
+    private void swap(int[] nums, int first, int second) {
+        int temp = nums[first];
+        nums[first] = nums[second];
+        nums[second] = temp;
+    }
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -170,6 +250,14 @@ public class Leet30April {
         System.out.println("\n>>> Problem on the day of 04/03/2020: Maximum Subarray.");
         int[] p3_nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
         System.out.printf("The largest sum of contiguous sub-array is %d\n", leet30April.maxSubArray(p3_nums));
+
+        System.out.println("\n>>> Problem on the day of 04/04/2020: Move Zeros.");
+        int[] p4_nums = {0,1,0,3,12};
+        leet30April.moveZeroes2(p4_nums);
+        for (int num : p4_nums)
+            System.out.printf("%d\t", num);
+        System.out.println();
+
     }
 
 }

@@ -157,7 +157,7 @@ public class Leet30April {
      * Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
      * <p>
      * Note:
-     *
+     * <p>
      * You must do this in-place without making a copy of the array.
      * Minimize the total number of operations.
      *
@@ -173,8 +173,7 @@ public class Leet30April {
                     k++;
                     nums[i] = 0;
                 }
-            }
-            else if (nums[i] == 0) {
+            } else if (nums[i] == 0) {
                 if (k == -1)
                     k = i;
                 // else k++;
@@ -220,6 +219,49 @@ public class Leet30April {
     }
 
     /**
+     * Problem on the day of 04/05/2020: Best Time to Buy and Sell Stock II.
+     * <p>
+     * Say you have an array for which the ith element is the price of a given stock on day i.
+     * <p>
+     * Design an algorithm to find the maximum profit. You may complete as many transactions as you like
+     * (i.e., buy one and sell one share of the stock multiple times).
+     * <p>
+     * Note: You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again).
+     *
+     * @param prices an array of stock prices
+     * @return max profit
+     */
+    public int maxProfit(int[] prices) {
+        if (prices.length == 0)
+            return 0;
+
+        int profit = 0;
+
+        int j = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] <= prices[i - 1]) {
+                profit += (prices[i - 1] - prices[j]);
+                j = i;
+                // System.out.printf("TRACE: i = %d, j = %d, profit = %d\n", i, j, profit);
+            }
+        }
+
+        profit += (prices[prices.length - 1] - prices[j]);
+
+        return profit;
+    }
+
+    // Improvement on the solution above.
+    public int maxProfit2(int[] prices) {
+        int maxprofit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1])
+                maxprofit += prices[i] - prices[i - 1];
+        }
+        return maxprofit;
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -231,6 +273,7 @@ public class Leet30April {
         nums[first] = nums[second];
         nums[second] = temp;
     }
+
     /**
      * Unit tests
      *
@@ -252,12 +295,15 @@ public class Leet30April {
         System.out.printf("The largest sum of contiguous sub-array is %d\n", leet30April.maxSubArray(p3_nums));
 
         System.out.println("\n>>> Problem on the day of 04/04/2020: Move Zeros.");
-        int[] p4_nums = {0,1,0,3,12};
+        int[] p4_nums = {0, 1, 0, 3, 12};
         leet30April.moveZeroes2(p4_nums);
         for (int num : p4_nums)
             System.out.printf("%d\t", num);
         System.out.println();
 
+        System.out.println("\n>>> Problem on the day of 04/05/2020: Best Time to Buy and Sell Stock II.");
+        int[] p5_nums = {7, 1, 5, 3, 6, 4};
+        System.out.printf("Max profit is %d\n", leet30April.maxProfit2(p5_nums));
     }
 
 }

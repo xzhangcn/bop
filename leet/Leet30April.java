@@ -1,8 +1,4 @@
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * created:    2019/04/02
@@ -262,6 +258,56 @@ public class Leet30April {
     }
 
     /**
+     * Problem on the day of 04/06/2020: Group Anagrams.
+     * <p>
+     * Given an array of strings, group anagrams together.
+     * <p>
+     * Note:
+     * All inputs will be in lowercase.
+     * The order of your output does not matter.
+     *
+     * @param strs an array of strings
+     * @return groups of anagrams
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for (String s : strs) {
+            char[] chars = s.toCharArray();
+            Arrays.sort(chars);
+            String sorted = new String(chars);
+            if (map.containsKey(sorted)) {
+                List<String> list = map.get(sorted);
+                list.add(s);
+                map.put(sorted, list);
+            } else {
+                List<String> list = new ArrayList<>();
+                list.add(s);
+                map.put(sorted, list);
+            }
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
+    // A more compact way of coding on the solution above
+    public List<List<String>> groupAnagrams2(String[] strs) {
+        if (strs.length == 0) return new ArrayList<>();
+
+        Map<String, List<String>> ans = new HashMap<>();
+        for (String s : strs) {
+            char[] ca = s.toCharArray();
+            Arrays.sort(ca);
+            String key = String.valueOf(ca);
+            if (!ans.containsKey(key))
+                ans.put(key, new ArrayList<>());
+
+            ans.get(key).add(s);
+        }
+        return new ArrayList<>(ans.values());
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -304,6 +350,15 @@ public class Leet30April {
         System.out.println("\n>>> Problem on the day of 04/05/2020: Best Time to Buy and Sell Stock II.");
         int[] p5_nums = {7, 1, 5, 3, 6, 4};
         System.out.printf("Max profit is %d\n", leet30April.maxProfit2(p5_nums));
+
+        System.out.println("\n>>> Problem on the day of 04/06/2020: Group Anagrams.");
+        String[] p6_strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
+        for (List<String> list : leet30April.groupAnagrams2(p6_strs)) {
+            for (String s : list)
+                System.out.printf("%s\t", s);
+
+            System.out.println();
+        }
     }
 
 }

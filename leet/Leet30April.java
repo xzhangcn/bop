@@ -304,7 +304,39 @@ public class Leet30April {
 
             ans.get(key).add(s);
         }
+
         return new ArrayList<>(ans.values());
+    }
+
+    /**
+     * Problem on 04/07/2020: Counting Elements.
+     * <p>
+     * Given an integer array arr, count element x such that x + 1 is also in arr.
+     *
+     * If there're duplicates in arr, count them seperately.
+     *
+     * @param arr an array of integers
+     * @return the count
+     */
+    public int countElements(int[] arr) {
+
+        // Use hashset to store all elements
+        Set<Integer> set = new HashSet<>();
+
+        for (int elem : arr) {
+            if (!set.contains(elem))
+                set.add(elem);
+        }
+
+        int count = 0;
+
+        // Loop again to count all valid elements.
+        for (int elem :arr) {
+            if (set.contains(elem + 1))
+                count++;
+        }
+
+        return count;
     }
 
     /**
@@ -353,12 +385,17 @@ public class Leet30April {
 
         System.out.println("\n>>> Problem on the day of 04/06/2020: Group Anagrams.");
         String[] p6_strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
+
         for (List<String> list : leet30April.groupAnagrams2(p6_strs)) {
             for (String s : list)
                 System.out.printf("%s\t", s);
 
             System.out.println();
         }
+
+        System.out.println("\n>>> Problem on 04/07/2020: Counting Elements.");
+        int[] p7_nums = {1,3,2,3,5,0};
+        System.out.printf("The count of qualifying elements is %d\n", leet30April.countElements(p7_nums));
     }
 
 }

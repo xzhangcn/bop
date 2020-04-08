@@ -340,6 +340,52 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/08/2020: Middle of the Linked List.
+     * <p>
+     * Given a non-empty, singly linked list with head node head, return a middle node of linked list.
+     *
+     * If there are two middle nodes, return the second middle node.
+     *
+     * Note:
+     * The number of nodes in the given list will be between 1 and 100.
+     *
+     * @param head head of a linked list
+     * @return the middle node
+     */
+    public ListNode middleNode(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode fast = head;
+        ListNode slow = head;
+
+        // fast pointer moves 2 steps forward every time, until it reaches the end of the linked list.
+        // slow pointer moves 1 step forward every time.
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+
+            if (fast.next != null)
+                fast = fast.next;
+        }
+
+        // the node slow pointer points to is the middle node.
+        return slow;
+    }
+
+    // A more compact way to rewrite the above solution
+    public ListNode middleNode2(ListNode head) {
+        ListNode slow = head, fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -396,6 +442,22 @@ public class Leet30April {
         System.out.println("\n>>> Problem on 04/07/2020: Counting Elements.");
         int[] p7_nums = {1,3,2,3,5,0};
         System.out.printf("The count of qualifying elements is %d\n", leet30April.countElements(p7_nums));
+
+        System.out.println("\n>>> Problem on 04/08/2020: Middle of the Linked List.");
+        ListNode p8_A1 = new ListNode(1);
+        ListNode p8_A2 = new ListNode(2);
+        ListNode p8_A3 = new ListNode(3);
+        ListNode p8_A4 = new ListNode(4);
+        ListNode p8_A5 = new ListNode(5);
+        ListNode p8_A6 = new ListNode(6);
+
+        p8_A1.next = p8_A2;
+        p8_A2.next = p8_A3;
+        p8_A3.next = p8_A4;
+        p8_A4.next = p8_A5;
+        p8_A5.next = p8_A6;
+
+        System.out.printf("The middle node is %d\n", leet30April.middleNode2(p8_A1).val);
     }
 
 }

@@ -312,7 +312,7 @@ public class Leet30April {
      * Problem on 04/07/2020: Counting Elements.
      * <p>
      * Given an integer array arr, count element x such that x + 1 is also in arr.
-     *
+     * <p>
      * If there're duplicates in arr, count them seperately.
      *
      * @param arr an array of integers
@@ -331,7 +331,7 @@ public class Leet30April {
         int count = 0;
 
         // Loop again to count all valid elements.
-        for (int elem :arr) {
+        for (int elem : arr) {
             if (set.contains(elem + 1))
                 count++;
         }
@@ -343,9 +343,9 @@ public class Leet30April {
      * Problem on 04/08/2020: Middle of the Linked List.
      * <p>
      * Given a non-empty, singly linked list with head node head, return a middle node of linked list.
-     *
+     * <p>
      * If there are two middle nodes, return the second middle node.
-     *
+     * <p>
      * Note:
      * The number of nodes in the given list will be between 1 and 100.
      *
@@ -383,6 +383,123 @@ public class Leet30April {
         }
 
         return slow;
+    }
+
+    /**
+     * Problem on 04/09/2020: Backspace String Compare.
+     * <p>
+     * Given two strings S and T, return if they are equal when both are typed into empty text editors. # means a backspace character.
+     * <p>
+     * Note:
+     * <p>
+     * 1 <= S.length <= 200
+     * 1 <= T.length <= 200
+     * S and T only contain lowercase letters and '#' characters.
+     * <p>
+     * Follow up:
+     * Can you solve it in O(N) time and O(1) space?
+     *
+     * @param S one string
+     * @param T another string
+     * @return true if equal, false otherwise
+     */
+    public boolean backspaceCompare(String S, String T) {
+
+        Deque<Character> stack1 = new ArrayDeque<>();
+        Deque<Character> stack2 = new ArrayDeque<>();
+
+        for (int i = 0; i < S.length(); i++) {
+            char c = S.charAt(i);
+            if (c == '#') {
+                if (!stack1.isEmpty())
+                    stack1.pop();
+            } else
+                stack1.push(c);
+        }
+
+        for (int i = 0; i < T.length(); i++) {
+            char c = T.charAt(i);
+            if (c == '#') {
+                if (!stack2.isEmpty())
+                    stack2.pop();
+            } else
+                stack2.push(c);
+        }
+
+        while (!stack1.isEmpty() && !stack2.isEmpty()) {
+            if (stack1.pop() != stack2.pop())
+                return false;
+        }
+
+        return stack1.isEmpty() && stack2.isEmpty();
+    }
+
+    // A more compact way to rewrite the above solution
+    public boolean backspaceCompare2(String S, String T) {
+        return build(S).equals(build(T));
+    }
+
+    private String build(String S) {
+        Stack<Character> ans = new Stack<>();
+        for (char c : S.toCharArray()) {
+            if (c != '#')
+                ans.push(c);
+            else if (!ans.empty())
+                ans.pop();
+        }
+        return String.valueOf(ans);
+    }
+
+    /**
+     * Another approach to the above problem.
+     * Intuition:
+     * When writing a character, it may or may not be part of the final string depending on how many backspace keystrokes occur in the future.
+     * If instead we iterate through the string in reverse, then we will know how many backspace characters we have seen,
+     * and therefore whether the result includes our character.
+     *
+     * Algorithm:
+     * Iterate through the string in reverse. If we see a backspace character, the next non-backspace character is skipped.
+     * If a character isn't skipped, it is part of the final answer.
+     */
+    public boolean backspaceCompare3(String S, String T) {
+        int i = S.length() - 1, j = T.length() - 1;
+        int skipS = 0, skipT = 0;
+
+        while (i >= 0 || j >= 0) { // While there may be chars in build(S) or build (T)
+
+            while (i >= 0) { // Find position of next possible char in build(S)
+                if (S.charAt(i) == '#') {
+                    skipS++;
+                    i--;
+                } else if (skipS > 0) {
+                    skipS--;
+                    i--;
+                } else break;
+            }
+
+            while (j >= 0) { // Find position of next possible char in build(T)
+                if (T.charAt(j) == '#') {
+                    skipT++;
+                    j--;
+                } else if (skipT > 0) {
+                    skipT--;
+                    j--;
+                } else break;
+            }
+
+            // If two actual characters are different
+            if (i >= 0 && j >= 0 && S.charAt(i) != T.charAt(j))
+                return false;
+
+            // If expecting to compare char vs nothing
+            if ((i >= 0) != (j >= 0))
+                return false;
+
+            i--;
+            j--;
+        }
+
+        return true;
     }
 
     /**
@@ -440,7 +557,7 @@ public class Leet30April {
         }
 
         System.out.println("\n>>> Problem on 04/07/2020: Counting Elements.");
-        int[] p7_nums = {1,3,2,3,5,0};
+        int[] p7_nums = {1, 3, 2, 3, 5, 0};
         System.out.printf("The count of qualifying elements is %d\n", leet30April.countElements(p7_nums));
 
         System.out.println("\n>>> Problem on 04/08/2020: Middle of the Linked List.");
@@ -458,6 +575,12 @@ public class Leet30April {
         p8_A5.next = p8_A6;
 
         System.out.printf("The middle node is %d\n", leet30April.middleNode2(p8_A1).val);
-    }
 
+        System.out.println("\n>>> Problem on 04/09/2020: Backspace String Compare.");
+        // String p9_S = "ab#c", p9_T = "ad#c";
+        // String p9_S = "a#c", p9_T = "b";
+        String p9_S = "a##c", p9_T = "#a#c";
+        // String p9_S = "gtc#uz#", p9_T = "gtcm##uz#";
+        System.out.printf("Does string '%s' equal to '%s' ? %b\n", p9_S, p9_T, leet30April.backspaceCompare3(p9_S, p9_T));
+    }
 }

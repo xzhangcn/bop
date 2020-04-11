@@ -1,3 +1,5 @@
+import com.sun.source.tree.Tree;
+
 import java.util.*;
 
 /**
@@ -456,7 +458,7 @@ public class Leet30April {
      * When writing a character, it may or may not be part of the final string depending on how many backspace keystrokes occur in the future.
      * If instead we iterate through the string in reverse, then we will know how many backspace characters we have seen,
      * and therefore whether the result includes our character.
-     *
+     * <p>
      * Algorithm:
      * Iterate through the string in reverse. If we see a backspace character, the next non-backspace character is skipped.
      * If a character isn't skipped, it is part of the final answer.
@@ -500,6 +502,75 @@ public class Leet30April {
         }
 
         return true;
+    }
+
+    /**
+     * Problem on 04/10/2020: MinStack.
+     */
+
+    /**
+     * Problem on 04/11/2020: Diameter of Binary Tree.
+     * <p>
+     * Given a binary tree, you need to compute the length of the diameter of the tree.
+     * The diameter of a binary tree is the length of the longest path between any two nodes in a tree.
+     * This path may or may not pass through the root.
+     * <p>
+     * Note: The length of path between two nodes is represented by the number of edges between them.
+     *
+     * @param root root of a binary tree
+     * @return diameter of the binary tree
+     */
+    public int diameterOfBinaryTree(TreeNode root) {
+        // Iterative method:
+        // The idea is to use PostOrder traversal which to ensure the availability of the node until its left and right sub-trees are processed.
+        // For this reason, we use peek() method to keep the node on the stack until its left and right sub-trees gets processed.
+        // Then for each node, find the maximum-depth of the left and right sub-trees. Using this maximum-depth, we update diameter if required.
+
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        Map<TreeNode, Integer> map = new HashMap<>();
+
+        int diameter = 0;
+
+        if (root != null)
+            stack.push(root);
+
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.peek();
+
+            if (node.left != null && !map.containsKey(node.left))
+                stack.push(node.left);
+            else if (node.right != null && !map.containsKey(node.right))
+                stack.push(node.right);
+            else {
+                stack.pop();
+                int leftDepth = map.getOrDefault(node.left, 0);
+                int rightDepth = map.getOrDefault(node.right, 0);
+                map.put(node, 1 + Math.max(leftDepth, rightDepth));
+                diameter = Math.max(diameter, leftDepth + rightDepth);
+            }
+        }
+
+        return diameter;
+    }
+
+    // Using recursive to solve the above problem
+    private int maxDiameter = 0;
+
+    public int diameterOfBinaryTree2(TreeNode root) {
+        maxDepth(root);
+        return maxDiameter;
+    }
+
+    // We search each node and remember the maximum number of nodes used in some path.
+    private int maxDepth(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        int leftDepth = maxDepth(root.left);
+        int rightDepth = maxDepth(root.right);
+        maxDiameter = Math.max(maxDiameter, leftDepth + rightDepth);
+
+        return 1 + Math.max(leftDepth, rightDepth);
     }
 
     /**
@@ -582,5 +653,19 @@ public class Leet30April {
         String p9_S = "a##c", p9_T = "#a#c";
         // String p9_S = "gtc#uz#", p9_T = "gtcm##uz#";
         System.out.printf("Does string '%s' equal to '%s' ? %b\n", p9_S, p9_T, leet30April.backspaceCompare3(p9_S, p9_T));
+
+        System.out.println("\n>>> Problem on 04/11/2020: Diameter of Binary Tree.");
+        TreeNode p11_tn1 = new TreeNode(1);
+        TreeNode p11_tn2 = new TreeNode(2);
+        TreeNode p11_tn3 = new TreeNode(3);
+        TreeNode p11_tn4 = new TreeNode(4);
+        TreeNode p11_tn5 = new TreeNode(5);
+
+        p11_tn1.left = p11_tn2;
+        p11_tn1.right = p11_tn3;
+        p11_tn2.left = p11_tn4;
+        p11_tn2.right = p11_tn5;
+
+        System.out.printf("The diameter of this binary tree is %d\n", leet30April.diameterOfBinaryTree2(p11_tn1));
     }
 }

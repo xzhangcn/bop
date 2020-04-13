@@ -1,5 +1,3 @@
-import com.sun.source.tree.Tree;
-
 import java.util.*;
 
 /**
@@ -446,7 +444,7 @@ public class Leet30April {
         for (char c : S.toCharArray()) {
             if (c != '#')
                 ans.push(c);
-            else if (!ans.empty())
+            else if (!ans.isEmpty())
                 ans.pop();
         }
         return String.valueOf(ans);
@@ -574,6 +572,136 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/12/2020: Last Stone Weight.
+     * <p>
+     * We have a collection of stones, each stone has a positive integer weight.
+     * <p>
+     * Each turn, we choose the two heaviest stones and smash them together.  Suppose the stones have weights x and y with x <= y.
+     * The result of this smash is:
+     * <p>
+     * If x == y, both stones are totally destroyed;
+     * If x != y, the stone of weight x is totally destroyed, and the stone of weight y has new weight y-x.
+     * At the end, there is at most 1 stone left.  Return the weight of this stone (or 0 if there are no stones left.)
+     * <p>
+     * Note:
+     * 1 <= stones.length <= 30
+     * 1 <= stones[i] <= 1000
+     *
+     * @param stones an array of positive integers
+     * @return weight of the last stone
+     */
+    public int lastStoneWeight(int[] stones) {
+
+        PriorityQueue<Integer> pQueue = new PriorityQueue<Integer>(Collections.reverseOrder());
+
+        for (int stone : stones)
+            pQueue.add(stone);
+
+        int x = 0, y = 0, z = 0;
+        while (pQueue.size() >= 2) {
+            x = pQueue.poll();
+            y = pQueue.poll();
+
+            z = x - y;
+
+            // System.out.printf("x = %d, y = %d, z = %d\n", x, y, z);
+
+            if (z > 0)
+                pQueue.add(z);
+        }
+
+        if (!pQueue.isEmpty())
+            return pQueue.peek();
+
+        return 0;
+    }
+
+    /**
+     * A bit more compact version by rewriting the above solution
+     * <p>
+     * Explanation
+     * - Put all elements into a priority queue.
+     * - Pop out the two biggest, push back the difference, until there are no more two elements left.
+     * <p>
+     * Complexity
+     * Time:   O(N * logN)
+     * Space:  O(N)
+     */
+    public int lastStoneWeight2(int[] stones) {
+        Queue<Integer> maxPq = new PriorityQueue<>(stones.length, Comparator.reverseOrder());
+
+        for (int stone : stones)
+            maxPq.add(stone);
+
+        while (maxPq.size() >= 2) {
+            int y = maxPq.poll();
+            int x = maxPq.poll();
+
+            if (y > x)
+                maxPq.add(y - x);
+        }
+
+        return maxPq.isEmpty() ? 0 : maxPq.peek();
+    }
+
+    /**
+     * Problem on 04/13/2020: Contiguous Array.
+     * <p>
+     * Given a binary array, find the maximum length of a contiguous subarray with equal number of 0 and 1.
+     * <p>
+     * Note: The length of the given binary array will not exceed 50,000.
+     *
+     * @param nums a binary array
+     * @return maximum length of a contiguous sub-array with equal number of 0 and 1
+     */
+    public int findMaxLength(int[] nums) {
+        // The idea is to change 0 in the original array to -1.
+        // Thus, if we find SUM[i, j] == 0 then we know there are even number of -1 and 1 between index i and j.
+        // Also put the sum to index mapping to a HashMap to make search faster.
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0)
+                nums[i] = -1;
+        }
+
+        Map<Integer, Integer> sumToIndex = new HashMap<>();
+        sumToIndex.put(0, -1);
+        int sum = 0, max = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+
+            if (sumToIndex.containsKey(sum)) {
+                max = Math.max(max, i - sumToIndex.get(sum));
+            } else {
+                sumToIndex.put(sum, i);
+            }
+        }
+
+        return max;
+    }
+
+    // More compact code to solve the problem above
+    public int findMaxLength2(int[] nums) {
+        // Keeping track of the balance (number of ones minus number of zeros)
+        // and storing the first index where each balance occurred.
+
+        Map<Integer, Integer> index = new HashMap<>();
+        index.put(0, -1);
+
+        int balance = 0, maxlen = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            balance += nums[i] * 2 - 1;
+            Integer first = index.putIfAbsent(balance, i);  // use putIfAbsent so I only need one map function call per number.
+            if (first != null)
+                maxlen = Math.max(maxlen, i - first);
+        }
+
+        return maxlen;
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -667,5 +795,15 @@ public class Leet30April {
         p11_tn2.right = p11_tn5;
 
         System.out.printf("The diameter of this binary tree is %d\n", leet30April.diameterOfBinaryTree2(p11_tn1));
+
+        System.out.println("\n>>> Problem on 04/12/2020: Last Stone Weight.");
+        int[] p12_nums = {2, 7, 4, 1, 8, 1};
+        System.out.printf("The weight of the last stone is %d\n", leet30April.lastStoneWeight2(p12_nums));
+
+        System.out.println("\n>>> Problem on 04/13/2020: Contiguous Array.");
+        // int[] p13_nums = {0, 1};
+        int[] p13_nums = {0, 1, 1, 0, 1, 1, 1, 0};
+        System.out.printf("The maximum length of a contiguous sub-array with equal number of 0 and 1 is %d\n", leet30April.findMaxLength(p13_nums));
+
     }
 }

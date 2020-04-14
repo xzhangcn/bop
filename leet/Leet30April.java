@@ -702,6 +702,45 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/14/2020: Perform String Shifts.
+     * <p>
+     * You are given a string s containing lowercase English letters, and a matrix shift, where shift[i] = [direction, amount]:
+     * <p>
+     * direction can be 0 (for left shift) or 1 (for right shift).
+     * amount is the amount by which string s is to be shifted.
+     * A left shift by 1 means remove the first character of s and append it to the end.
+     * Similarly, a right shift by 1 means remove the last character of s and add it to the beginning.
+     * Return the final string after all operations.
+     *
+     * @param s     a string
+     * @param shift a shift matrix
+     * @return final string after all operations
+     */
+    public String stringShift(String s, int[][] shift) {
+
+        int left = 0, right = 0;
+        for (int[] row : shift) {
+            if (row[0] == 0)
+                left += row[1];
+            else
+                right += row[1];
+        }
+
+        if (left == right)
+            return s;
+
+        int len = s.length();
+        int delta = (left - right) % len;
+
+        System.out.printf("TRACE: left = %d, right = %d, delta = %d\n", left, right, delta);
+
+        if (delta > 0)
+            return s.substring(delta) + s.substring(0, delta);
+        else
+            return s.substring(len + delta) + s.substring(0, len + delta);
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -805,5 +844,9 @@ public class Leet30April {
         int[] p13_nums = {0, 1, 1, 0, 1, 1, 1, 0};
         System.out.printf("The maximum length of a contiguous sub-array with equal number of 0 and 1 is %d\n", leet30April.findMaxLength(p13_nums));
 
+        System.out.println("\n>>> Problem on 04/14/2020: Perform String Shifts.");
+        String p14_s = "abc";
+        int[][] p14_shift = {{0, 1}, {1, 2}};
+        System.out.printf("The shifted string is '%s'\n", leet30April.stringShift(p14_s, p14_shift));
     }
 }

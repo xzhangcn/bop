@@ -12,7 +12,7 @@
 ## What is it?
 Here's what I plan to do for this project:
 
-- Share programs I wrote for the course assignments (mainly from Princeton) from coursera and hopefully draw some thoughtful discussions (I will withdraw this and put it in a separate private repository, because posting assignment solutions or partial solutions in a *public* git is a violation of Coursera (and Princeton) policies.)
+- Record my learning and developing progress
 - Post miniature programs used to resolve practical problems I met
 - List interesting program challenges and my solutions :smile:
 

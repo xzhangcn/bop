@@ -805,6 +805,98 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/16/2020: Valid Parenthesis String.
+     * <p>
+     * Given a string containing only three types of characters: '(', ')' and '*', write a function to check
+     * whether this string is valid. We define the validity of a string by these rules:
+     *
+     * Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+     * Any right parenthesis ')' must have a corresponding left parenthesis '('.
+     * Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+     * '*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string.
+     * An empty string is also valid.
+     *
+     * @param s a string
+     * @return true if the string is valid
+     */
+    public boolean checkValidString(String s) {
+
+        Deque<Integer> leftID = new ArrayDeque<>();
+        Deque<Integer> starID = new ArrayDeque<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(')
+                leftID.push(i);
+            else if (ch == '*')
+                starID.push(i);
+            else {
+                // Once a right bracket comes, pop left bracket stack first if it is not empty.
+                // If the left bracket stack is empty, pop the star stack if it is not empty.
+                // A false return can be made provided that both stacks are empty.
+                if (leftID.isEmpty() && starID.isEmpty())   return false;
+
+                // Greedy algorithm is used here.
+                // We always want to use left brackets to balance the right one first as the * symbol is a wild card.
+                if (!leftID.isEmpty())
+                    leftID.pop();
+                else
+                    starID.pop();
+            }
+        }
+
+        // Now attention is paid to the remaining stuff in these two stacks.
+        // Note that the left bracket CANNOT appear after the star as there is NO way to balance the bracket.
+        // In other words, whenever there is a left bracket index appears after the Last star, a false statement can be made.
+        // Otherwise, pop out each from the left bracket and star stack.
+        while (!leftID.isEmpty() && !starID.isEmpty()) {
+            if (leftID.pop() > starID.pop())
+                return false;
+        }
+
+        // A correct sequence should have an empty left bracket stack. You don't need to take care of the star stack.
+        return leftID.isEmpty();
+    }
+
+    /**
+     * Another approach to solve the above problem
+     *
+     * We count the number of ')' we are waiting for,
+     * and it's equal to the number of open parenthesis.
+     * This number will be in a range and we count it as [cmin, cmax]
+     *
+     * cmax counts the maximum open parenthesis, which means the maximum number of unbalanced '(' that COULD be paired.
+     * cmin counts the minimum open parenthesis, which means the number of unbalanced '(' that MUST be paired.
+     *
+     * The string is valid for 2 condition:
+     *    - cmax will never be negative.
+     *    - cmin is 0 at the end.
+     */
+    public boolean checkValidString2(String s) {
+
+        int cmin = 0;
+        int cmax = 0;
+
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                cmax++;
+                cmin++;
+            } else if (c == ')') {
+                cmax--;
+                cmin = Math.max(cmin - 1, 0);
+            } else {
+                cmax++;
+                cmin = Math.max(cmin - 1, 0);
+            }
+
+            if (cmax < 0) return false;
+        }
+
+        return cmin == 0;
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -919,5 +1011,9 @@ public class Leet30April {
         for (int num : p15_answer)
             System.out.printf("%d\t", num);
         System.out.println();
+
+        System.out.println("\n>>> Problem on 04/16/2020: Valid Parenthesis String.");
+        String p16_s = "(*))";
+        System.out.printf("Is string '%s' a valid parenthesis string? %b\n", p16_s, leet30April.checkValidString2(p16_s));
     }
 }

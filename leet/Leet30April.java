@@ -745,12 +745,12 @@ public class Leet30April {
      * <p>
      * Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to
      * the product of all the elements of nums except nums[i].
-     *
+     * <p>
      * Constraint: It's guaranteed that the product of the elements of any prefix or suffix of the array
      * (including the whole array) fits in a 32 bit integer.
-     *
+     * <p>
      * Note: Please solve it without division and in O(n).
-     *
+     * <p>
      * Follow up:
      * Could you solve it with constant space complexity? (The output array does not count as extra space
      * for the purpose of space complexity analysis.)
@@ -809,7 +809,7 @@ public class Leet30April {
      * <p>
      * Given a string containing only three types of characters: '(', ')' and '*', write a function to check
      * whether this string is valid. We define the validity of a string by these rules:
-     *
+     * <p>
      * Any left parenthesis '(' must have a corresponding right parenthesis ')'.
      * Any right parenthesis ')' must have a corresponding left parenthesis '('.
      * Left parenthesis '(' must go before the corresponding right parenthesis ')'.
@@ -834,7 +834,7 @@ public class Leet30April {
                 // Once a right bracket comes, pop left bracket stack first if it is not empty.
                 // If the left bracket stack is empty, pop the star stack if it is not empty.
                 // A false return can be made provided that both stacks are empty.
-                if (leftID.isEmpty() && starID.isEmpty())   return false;
+                if (leftID.isEmpty() && starID.isEmpty()) return false;
 
                 // Greedy algorithm is used here.
                 // We always want to use left brackets to balance the right one first as the * symbol is a wild card.
@@ -860,17 +860,17 @@ public class Leet30April {
 
     /**
      * Another approach to solve the above problem
-     *
+     * <p>
      * We count the number of ')' we are waiting for,
      * and it's equal to the number of open parenthesis.
      * This number will be in a range and we count it as [cmin, cmax]
-     *
+     * <p>
      * cmax counts the maximum open parenthesis, which means the maximum number of unbalanced '(' that COULD be paired.
      * cmin counts the minimum open parenthesis, which means the number of unbalanced '(' that MUST be paired.
-     *
+     * <p>
      * The string is valid for 2 condition:
-     *    - cmax will never be negative.
-     *    - cmin is 0 at the end.
+     * - cmax will never be negative.
+     * - cmin is 0 at the end.
      */
     public boolean checkValidString2(String s) {
 
@@ -894,6 +894,121 @@ public class Leet30April {
         }
 
         return cmin == 0;
+    }
+
+    private int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+    /**
+     * Problem on 04/17/2020: Number of Islands.
+     * <p>
+     * Given a 2d grid map of '1's (land) and '0's (water), count the number of islands.
+     * An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.
+     * You may assume all four edges of the grid are all surrounded by water.
+     *
+     * @param grid input grid map filled with 0 and 1
+     * @return number of islands in this 2D grid map
+     */
+    public int numIslands(char[][] grid) {
+        if (grid.length == 0)
+            return 0;
+
+        int m = grid.length;
+        int n = grid[0].length;
+        int count = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * @param grid input grid map filled with 0 and 1
+     * @param i    horizontal position
+     * @param j    vertical position
+     */
+    private void dfs(char[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        // base case
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == '0')
+            return;
+
+        grid[i][j] = '0';   // Mark the site as visited
+        for (int[] dir : directions) {
+            int nextX = i + dir[0];
+            int nextY = j + dir[1];
+            dfs(grid, nextX, nextY);
+        }
+    }
+
+
+    // BFS version
+    public int numIslands2(char[][] grid) {
+        if (grid.length == 0)
+            return 0;
+
+        int m = grid.length;
+        int n = grid[0].length;
+
+        System.out.printf("m = %d, n = %d \n", m, n);
+
+        // use visited array to avoid changing the values of original grid
+        boolean[][] visited = new boolean[m][n];
+
+        Queue<Integer> queue = new LinkedList<Integer>();
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1' && !visited[i][j]) {
+                    queue.offer(i * n + j);     // convert 2D coordinates to 1D index
+                    visited[i][j] = true;
+                    bfs(grid, queue, visited);
+                    count++;
+
+                    System.out.printf("pos: (%d, %d), count = %d \n\n", i, j, count);
+                }
+            }
+        }
+
+        return count;
+    }
+
+    private void bfs(char[][] grid, Queue<Integer> queue, boolean[][] visited) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();    // dequeue
+
+            // convert 1D index back to 2D coordinates
+            int currX = curr / n;
+            int currY = curr - currX * n;
+
+            System.out.printf("curr: %d, curr pos: (%d, %d) \n", curr, currX, currY);
+
+            // iterate through 4 directions
+            for (int[] direction : directions) {
+
+                int nextX = currX + direction[0];
+                int nextY = currY + direction[1];
+                if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= n
+                        || visited[nextX][nextY] || grid[nextX][nextY] == '0')
+                    continue;
+
+                visited[nextX][nextY] = true;
+                queue.offer(nextX * n + nextY);     // enqueue
+
+                System.out.printf("next pos: (%d, %d) \n", nextX, nextY);
+            }
+        }
     }
 
     /**
@@ -1006,7 +1121,7 @@ public class Leet30April {
         System.out.printf("The shifted string is '%s'\n", leet30April.stringShift(p14_s, p14_shift));
 
         System.out.println("\n>>> Problem on 04/15/2020: Product of Array Except Self.");
-        int[] p15_nums = {1,2,3,4};
+        int[] p15_nums = {1, 2, 3, 4};
         int[] p15_answer = leet30April.productExceptSelf(p15_nums);
         for (int num : p15_answer)
             System.out.printf("%d\t", num);
@@ -1015,5 +1130,12 @@ public class Leet30April {
         System.out.println("\n>>> Problem on 04/16/2020: Valid Parenthesis String.");
         String p16_s = "(*))";
         System.out.printf("Is string '%s' a valid parenthesis string? %b\n", p16_s, leet30April.checkValidString2(p16_s));
+
+        System.out.println("\n>>> Problem on 04/17/2020: Number of Islands.");
+        char[][] p17_grid = {
+                {'1', '1', '0', '0', '0' }, {'1', '1', '0', '0', '0' }, {'0', '0', '1', '0', '0' }, {'0', '0', '0', '1', '1' }
+        };
+
+        System.out.printf("Number of islands in the grid is %d\n", leet30April.numIslands2(p17_grid));
     }
 }

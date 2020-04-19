@@ -1021,6 +1021,7 @@ public class Leet30April {
      * <p>
      * Note: You can only move either down or right at any point in time.
      * <p>
+     *
      * Algorithm:
      * This is a typical DP problem.
      * Suppose the minimum path sum of arriving at point (i, j) is S[i][j],
@@ -1196,6 +1197,67 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/19/2020: Search in Rotated Sorted Array.
+     * <p>
+     * Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+     *
+     * (i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).
+     *
+     * You are given a target value to search. If found in the array return its index, otherwise return -1.
+     *
+     * You may assume no duplicate exists in the array.
+     *
+     * Your algorithm's runtime complexity must be in the order of O(log n).
+     *
+     * @param nums an integer array
+     * @param target an integer to search for
+     * @return the index of the integer if found, -1 otherwise
+     */
+    public int search(int[] nums, int target) {
+        if (nums == null || nums.length == 0)
+            return -1;
+
+        int lo = 0, hi = nums.length - 1;
+        // when we use the condition "left <= right", we do not need to determine if nums[left] == target
+        // in outside of loop, because the jumping condition is left > right, we will have the determination
+        // condition if(target == nums[mid]) inside of loop
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (target == nums[mid]) {
+                return mid;
+            }
+            // if left part is monotonically increasing, or the pivot point is on the right part
+            if (nums[lo] <= nums[mid]) {
+                // 2,3,4,5,6,7,0,1
+                // must use "<=" at here since we need to make sure target is in the left part,
+                // then safely drop the right part
+                if (nums[lo] <= target && target < nums[mid]) {
+                    hi = mid - 1;
+                }
+                else {
+                    // right bias
+                    lo = mid + 1;
+                }
+            }
+
+            // if right part is monotonically increasing, or the pivot point is on the left part
+            else {
+                // 6,7,0,1,2,3,4,5
+                // must use "<=" at here since we need to make sure target is in the right part,
+                // then safely drop the left part
+                if (nums[mid] < target && target <= nums[hi]) {
+                    lo = mid + 1;
+                }
+                else {
+                    hi = mid - 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Swap the elements in an array
      *
      * @param nums   an integer array
@@ -1335,5 +1397,10 @@ public class Leet30April {
                 {4, 9, 9, 7, 9, 1, 9, 0}};
         */
         System.out.printf("The minimum path sum is %d\n", leet30April.minPathSum(p18_grid));
+
+        System.out.println("\n>>> Problem on 04/19/2020: Search in Rotated Sorted Array.");
+        int[] p19_nums = { 4, 5, 6, 7, 0, 1, 2 };
+        int p19_target = 0;
+        System.out.printf("The integer %d in the rotated sorted array is in the index of %d.\n", p19_target, leet30April.search(p19_nums, p19_target));
     }
 }

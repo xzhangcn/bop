@@ -1011,6 +1011,190 @@ public class Leet30April {
         }
     }
 
+    private int[][] directions2 = {{0, 1}, {1, 0}};
+
+    /**
+     * Problem on 04/18/2020: Minimum Path Sum.
+     * <p>
+     * Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right
+     * which minimizes the sum of all numbers along its path.
+     * <p>
+     * Note: You can only move either down or right at any point in time.
+     * <p>
+     * Algorithm:
+     * This is a typical DP problem.
+     * Suppose the minimum path sum of arriving at point (i, j) is S[i][j],
+     * then the state equation is S[i][j] = min(S[i - 1][j], S[i][j - 1]) + grid[i][j].
+     * <p>
+     * Well, some boundary conditions need to be handled.
+     * The boundary conditions happen on the topmost row (S[i - 1][j] does not exist)
+     * and the leftmost column (S[i][j - 1] does not exist).
+     * <p>
+     * Suppose grid is like [1, 1, 1, 1], then the minimum sum to arrive at each point is simply
+     * an accumulation of previous points and the result is [1, 2, 3, 4].
+     *
+     * @param grid a maxtrix filled with non-negative integer
+     * @return the minimum sum connecting the top left corner to the bottom right
+     */
+
+    // First version: unoptimized code
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        int[][] sum = new int[m][n];
+
+        sum[0][0] = grid[0][0];
+        // boundary condition on leftmost column
+        for (int i = 1; i < m; i++)
+            sum[i][0] = sum[i - 1][0] + grid[i][0];
+
+        // boundary condition on topmost row
+        for (int j = 1; j < n; j++)
+            sum[0][j] = sum[0][j - 1] + grid[0][j];
+
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                sum[i][j] = Math.min(sum[i - 1][j], sum[i][j - 1]) + grid[i][j];
+
+        return sum[m - 1][n - 1];
+    }
+
+    // Without additional array by reusing the original one
+    public int minPathSum2(int[][] grid) {
+        int height = grid.length;
+        int width = grid[0].length;
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (row == 0 && col == 0)
+                    ;
+                else if (row == 0)
+                    grid[row][col] = grid[row][col] + grid[row][col - 1];
+                else if (col == 0)
+                    grid[row][col] = grid[row][col] + grid[row - 1][col];
+                else
+                    grid[row][col] = grid[row][col] + Math.min(grid[row - 1][col], grid[row][col - 1]);
+            }
+        }
+
+        return grid[height - 1][width - 1];
+    }
+
+    // Rewrite the above solution a bit
+    public int minPathSum3(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        for (int i = 1; i < n; i++)
+            grid[0][i] += grid[0][i - 1];
+
+        for (int i = 1; i < m; i++) {
+            grid[i][0] += grid[i - 1][0];
+
+            for (int j = 1; j < n; j++) {
+                grid[i][j] += Math.min(grid[i][j - 1], grid[i - 1][j]);
+            }
+        }
+
+        return grid[m - 1][n - 1];
+    }
+
+    // I am trying to use graph dfs to solve it, but it has some bugs
+    public int minPathSum4(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        if (m == 1 && n == 1)
+            return grid[0][0];
+
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == (m - 1) && j == (n - 1))
+                    continue;
+
+                map.put(i * n + j, neighbor(i, j, m, n));
+            }
+        }
+
+        /*
+        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+        */
+
+        int sum = 0, minSum = Integer.MAX_VALUE;
+        Deque<Integer> stack = new ArrayDeque<>();
+        int src = 0, dst = (m - 1) * n + n - 1;
+        stack.push(src);      // push down the cell on the top left
+
+        sum += grid[0][0];
+
+        while (!stack.isEmpty()) {
+            int v = stack.peek();
+
+            // convert 1D index back to 2D coordinates
+            int x = v / n;
+            int y = v - x * n;
+
+            // sum += grid[x][y];
+
+            List<Integer> neighbors = map.get(v);
+
+            if (neighbors != null & neighbors.size() != 0) {
+                int neighbor = neighbors.remove(0);    // or remove?
+
+                int neighborX = neighbor / n;
+                int neighborY = neighbor - neighborX * n;
+                int value = grid[neighborX][neighborY];
+                sum += value;
+
+                if (neighbor == dst) {
+                    minSum = Math.min(minSum, sum);
+
+                    System.out.printf(">>> TRACE dst: neighbor = %d, value = %d, sum = %d, minSum = %d\n", neighbor, value, sum, minSum);
+
+                    sum -= value;
+
+                } else {
+                    stack.push(neighbor);
+
+                    System.out.printf("TRACE push: neighbor = %d, value = %d, sum = %d\n", neighbor, value, sum);
+                }
+
+            } else {
+                int popV = stack.pop();
+
+                int popX = popV / n;
+                int popY = popV - popX * n;
+                int value = grid[popX][popY];
+
+                System.out.printf("TRACE pop: popV = %d, value = %d, sum = %d\n", popV, value, sum);
+
+                sum -= value;
+            }
+        }
+
+        return minSum;
+
+    }
+
+    private List<Integer> neighbor(int x, int y, int m, int n) {
+        List<Integer> neighbors = new LinkedList<>();
+
+        for (int[] direction : directions2) {
+            int nextX = x + direction[0];
+            int nextY = y + direction[1];
+            if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= n)
+                continue;
+
+            neighbors.add(nextX * n + nextY);
+        }
+
+        return neighbors;
+    }
+
     /**
      * Swap the elements in an array
      *
@@ -1137,5 +1321,19 @@ public class Leet30April {
         };
 
         System.out.printf("Number of islands in the grid is %d\n", leet30April.numIslands2(p17_grid));
+
+        System.out.println("\n>>> Problem on 04/18/2020: Minimum Path Sum.");
+        int[][] p18_grid = {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
+        /*
+        int[][] p18_grid = {
+                {1, 4, 8, 6, 2, 2, 1, 7},
+                {4, 7, 3, 1, 4, 5, 5, 1},
+                {8, 8, 2, 1, 1, 8, 0, 1},
+                {8, 9, 2, 9, 8, 0, 8, 9},
+                {5, 7, 5, 7, 1, 8, 5, 5},
+                {7, 0, 9, 4, 5, 6, 5, 6},
+                {4, 9, 9, 7, 9, 1, 9, 0}};
+        */
+        System.out.printf("The minimum path sum is %d\n", leet30April.minPathSum(p18_grid));
     }
 }

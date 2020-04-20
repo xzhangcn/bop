@@ -1021,7 +1021,7 @@ public class Leet30April {
      * <p>
      * Note: You can only move either down or right at any point in time.
      * <p>
-     *
+     * <p>
      * Algorithm:
      * This is a typical DP problem.
      * Suppose the minimum path sum of arriving at point (i, j) is S[i][j],
@@ -1200,16 +1200,16 @@ public class Leet30April {
      * Problem on 04/19/2020: Search in Rotated Sorted Array.
      * <p>
      * Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
-     *
+     * <p>
      * (i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).
-     *
+     * <p>
      * You are given a target value to search. If found in the array return its index, otherwise return -1.
-     *
+     * <p>
      * You may assume no duplicate exists in the array.
-     *
+     * <p>
      * Your algorithm's runtime complexity must be in the order of O(log n).
      *
-     * @param nums an integer array
+     * @param nums   an integer array
      * @param target an integer to search for
      * @return the index of the integer if found, -1 otherwise
      */
@@ -1233,8 +1233,7 @@ public class Leet30April {
                 // then safely drop the right part
                 if (nums[lo] <= target && target < nums[mid]) {
                     hi = mid - 1;
-                }
-                else {
+                } else {
                     // right bias
                     lo = mid + 1;
                 }
@@ -1247,14 +1246,51 @@ public class Leet30April {
                 // then safely drop the left part
                 if (nums[mid] < target && target <= nums[hi]) {
                     lo = mid + 1;
-                }
-                else {
+                } else {
                     hi = mid - 1;
                 }
             }
         }
 
         return -1;
+    }
+
+    /**
+     * Problem on 04/20/2020: Construct Binary Search Tree from Preorder Traversal.
+     * <p>
+     * Return the root node of a binary search tree that matches the given preorder traversal.
+     * <p>
+     * (Recall that a binary search tree is a binary tree where for every node,
+     * any descendant of node.left has a value < node.val, and any descendant of node.right has a value > node.val.
+     * Also recall that a preorder traversal displays the value of the node first, then traverses node.left, then traverses node.right.)
+     * <p>
+     * Note:
+     * <p>
+     * 1 <= preorder.length <= 100
+     * The values of preorder are distinct.
+     *
+     * @param preorder an integer array
+     * @return the root of constructed binary search tree
+     */
+    public TreeNode bstFromPreorder(int[] preorder) {
+        TreeNode root = null;
+
+        for (int value : preorder) {
+            root = put(root, value);    // As the input array is preorder, the first array element is the root
+        }
+
+        return root;
+    }
+
+    private TreeNode put(TreeNode x, int val) {
+        if (x == null) return new TreeNode(val);
+
+        int cmp = val - x.val;
+        if (cmp < 0) x.left = put(x.left, val);
+        else if (cmp > 0) x.right = put(x.right, val);
+        else x.val = val;   // It's unnecessary here, because all array elements are distinct.
+
+        return x;
     }
 
     /**
@@ -1379,7 +1415,7 @@ public class Leet30April {
 
         System.out.println("\n>>> Problem on 04/17/2020: Number of Islands.");
         char[][] p17_grid = {
-                {'1', '1', '0', '0', '0' }, {'1', '1', '0', '0', '0' }, {'0', '0', '1', '0', '0' }, {'0', '0', '0', '1', '1' }
+                {'1', '1', '0', '0', '0'}, {'1', '1', '0', '0', '0'}, {'0', '0', '1', '0', '0'}, {'0', '0', '0', '1', '1'}
         };
 
         System.out.printf("Number of islands in the grid is %d\n", leet30April.numIslands2(p17_grid));
@@ -1399,8 +1435,18 @@ public class Leet30April {
         System.out.printf("The minimum path sum is %d\n", leet30April.minPathSum(p18_grid));
 
         System.out.println("\n>>> Problem on 04/19/2020: Search in Rotated Sorted Array.");
-        int[] p19_nums = { 4, 5, 6, 7, 0, 1, 2 };
+        int[] p19_nums = {4, 5, 6, 7, 0, 1, 2};
         int p19_target = 0;
         System.out.printf("The integer %d in the rotated sorted array is in the index of %d.\n", p19_target, leet30April.search(p19_nums, p19_target));
+
+        System.out.println("\n>>> Problem on 04/20/2020: Construct Binary Search Tree from Preorder Traversal.");
+        int[] p20_nums = {8, 5, 1, 7, 10, 12};
+        TreeNode p20_root = leet30April.bstFromPreorder(p20_nums);
+        LeetTree leetTree = new LeetTree();
+        for (List<Integer> list : leetTree.levelOrder(p20_root)) {
+            for (int val : list)
+                System.out.printf("%d \t", val);
+            System.out.println();
+        }
     }
 }

@@ -1293,6 +1293,85 @@ public class Leet30April {
         return x;
     }
 
+    private interface BinaryMatrix {
+        int get(int x, int y);
+
+        List<Integer> dimensions();
+    }
+
+    private static class BinMatrix implements BinaryMatrix {
+        int[][] matrix;
+        int m, n;
+
+        public BinMatrix(int[][] a) {
+            m = a.length;
+            n = a[0].length;
+            matrix = new int[m][n];
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++)
+                    matrix[i][j] = a[i][j];
+        }
+
+        public int get(int x, int y) {
+            return matrix[x][y];
+        }
+
+        public List<Integer> dimensions() {
+            List<Integer> dimen = new ArrayList<>(2);
+            dimen.add(m);
+            dimen.add(n);
+
+            return dimen;
+        }
+    }
+
+    /**
+     * Problem on 04/21/2020: Leftmost Column with at Least a One.
+     * <p>
+     * (This problem is an interactive problem.)
+     * <p>
+     * A binary matrix means that all elements are 0 or 1. For each individual row of the matrix, this row is sorted in non-decreasing order.
+     * <p>
+     * Given a row-sorted binary matrix binaryMatrix, return leftmost column index(0-indexed) with at least a 1 in it.
+     * If such index doesn't exist, return -1.
+     * <p>
+     * You can't access the Binary Matrix directly.  You may only access the matrix using a BinaryMatrix interface:
+     * <p>
+     * BinaryMatrix.get(x, y) returns the element of the matrix at index (x, y) (0-indexed).
+     * BinaryMatrix.dimensions() returns a list of 2 elements [n, m], which means the matrix is n * m.
+     * Submissions making more than 1000 calls to BinaryMatrix.get will be judged Wrong Answer.
+     * Also, any solutions that attempt to circumvent the judge will result in disqualification.
+     * <p>
+     * For custom testing purposes you're given the binary matrix mat as input in the following four examples.
+     * You will not have access the binary matrix directly.
+     *
+     * @param binaryMatrix an binary matrix
+     * @return leftmost column index(0-indexed) with at least a 1 in it
+     */
+    public int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+        // For each row do a binary search to find the leftmost one on that row and update the answer.
+        List<Integer> dimen = binaryMatrix.dimensions();
+        int m = dimen.get(0);
+        int n = dimen.get(1);
+
+        int leftCol = Integer.MAX_VALUE;
+
+        for (int i = 0; i < m; i++) {
+            int lo = 0, hi = n - 1;
+            while (lo <= hi) {
+                int mid = lo + (hi - lo) / 2;
+                if (binaryMatrix.get(i, mid) == 1) {
+                    hi = mid - 1;
+                    leftCol = Math.min(leftCol, mid);
+                } else {
+                    lo = mid + 1;
+                }
+            }
+        }
+
+        return (leftCol == Integer.MAX_VALUE ? -1 : leftCol);
+    }
+
     /**
      * Swap the elements in an array
      *
@@ -1448,5 +1527,10 @@ public class Leet30April {
                 System.out.printf("%d \t", val);
             System.out.println();
         }
+
+        System.out.println("\n>>> Problem on 04/21/2020: leftMostColumnWithOne.");
+        int[][] p21_mat = {{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}};
+        BinMatrix binMatrix = new BinMatrix(p21_mat);
+        System.out.printf("The left most column with one is %d\n", leet30April.leftMostColumnWithOne(binMatrix));
     }
 }

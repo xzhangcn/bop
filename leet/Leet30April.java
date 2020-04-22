@@ -1386,6 +1386,51 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/22/2020: Subarray Sum Equals K.
+     * <p>
+     * Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k.
+     *
+     * @param nums an integer array
+     * @param k    an integer
+     * @return total number of continuous subarrays whose sum equals to k
+     */
+    public int subarraySum(int[] nums, int k) {
+        int len = nums.length;
+        int[] sum = new int[len + 1];
+        sum[0] = 0;
+
+        int count = 0;
+
+        for (int i = 0; i < len; i++)
+            sum[i + 1] = sum[i] + nums[i];
+
+        for (int i = 0; i < len + 1; i++) {
+            for (int j = i + 1; j < len + 1; j++) {
+                if (sum[j] - sum[i] == k)
+                    count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int subarraySum2(int[] nums, int k) {
+        int count = 0, sum = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (map.containsKey(sum - k))
+                count += map.get(sum - k);
+
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -1532,5 +1577,11 @@ public class Leet30April {
         int[][] p21_mat = {{0, 0, 0, 1}, {0, 0, 1, 1}, {0, 1, 1, 1}};
         BinMatrix binMatrix = new BinMatrix(p21_mat);
         System.out.printf("The left most column with one is %d\n", leet30April.leftMostColumnWithOne(binMatrix));
+
+        System.out.println("\n>>> Problem on 04/22/2020: Subarray Sum Equals K.");
+        int[] p22_nums = {1, 1, 1};
+        int p22_k = 2;
+        System.out.printf("The total number of continuous subarrays whose sum equals to %d is %d\n.",
+                p22_k, leet30April.subarraySum2(p22_nums, p22_k));
     }
 }

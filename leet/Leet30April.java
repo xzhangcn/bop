@@ -628,7 +628,7 @@ public class Leet30April {
      * Space:  O(N)
      */
     public int lastStoneWeight2(int[] stones) {
-        Queue<Integer> maxPq = new PriorityQueue<>(stones.length, Comparator.reverseOrder());
+        PriorityQueue<Integer> maxPq = new PriorityQueue<>(stones.length, Comparator.reverseOrder());
 
         for (int stone : stones)
             maxPq.add(stone);
@@ -963,7 +963,7 @@ public class Leet30April {
         // use visited array to avoid changing the values of original grid
         boolean[][] visited = new boolean[m][n];
 
-        Queue<Integer> queue = new LinkedList<Integer>();
+        java.util.Queue<Integer> queue = new LinkedList<Integer>();
         int count = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
@@ -981,7 +981,7 @@ public class Leet30April {
         return count;
     }
 
-    private void bfs(char[][] grid, Queue<Integer> queue, boolean[][] visited) {
+    private void bfs(char[][] grid, java.util.Queue<Integer> queue, boolean[][] visited) {
         int m = grid.length;
         int n = grid[0].length;
 
@@ -1431,6 +1431,27 @@ public class Leet30April {
     }
 
     /**
+     * Problem on 04/23/2020: Bitwise AND of Numbers Range.
+     * <p>
+     * Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+     *
+     * @param m an integer
+     * @param n an integer
+     * @return bitwise AND of all numbers in this range
+     */
+    public int rangeBitwiseAnd(int m, int n) {
+        int i = 0;          // i means we have how many bits are 0 on the right
+
+        while(m != n){
+            m >>= 1;
+            n >>= 1;
+            i++;
+        }
+
+        return m << i;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -1583,5 +1604,10 @@ public class Leet30April {
         int p22_k = 2;
         System.out.printf("The total number of continuous subarrays whose sum equals to %d is %d\n.",
                 p22_k, leet30April.subarraySum2(p22_nums, p22_k));
+
+        System.out.println("\n>>> Problem on 04/23/2020: Bitwise AND of Numbers Range.");
+        int p23_m = 5, p23_n = 7;
+        System.out.printf("The bitwise AND of all numbers in this range between %d and %d is %d\n",
+                p23_m, p23_n, leet30April.rangeBitwiseAnd(p23_m, p23_n));
     }
 }

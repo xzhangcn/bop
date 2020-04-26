@@ -1442,7 +1442,7 @@ public class Leet30April {
     public int rangeBitwiseAnd(int m, int n) {
         int i = 0;          // i means we have how many bits are 0 on the right
 
-        while(m != n){
+        while (m != n) {
             m >>= 1;
             n >>= 1;
             i++;
@@ -1450,6 +1450,147 @@ public class Leet30April {
 
         return m << i;
     }
+
+    /**
+     * Problem on 04/24/2020: LRU Cache.
+     */
+
+    /**
+     * Problem on 04/25/2020: Jump Game.
+     * <p>
+     * Given an array of non-negative integers, you are initially positioned at the first index of the array.
+     * <p>
+     * Each element in the array represents your maximum jump length at that position.
+     * <p>
+     * Determine if you are able to reach the last index.
+     *
+     * @param nums an array of non-negative integers
+     * @return true if the last index can be reached
+     */
+
+    public boolean canJump(int[] nums) {
+        return canJumpFromPosition(0, nums);
+    }
+
+    // Approach 1: back tracking
+    private boolean canJumpFromPosition(int position, int[] nums) {
+        if (position == nums.length - 1) {
+            return true;
+        }
+
+        int furthestJump = Math.min(position + nums[position], nums.length - 1);
+        for (int nextPosition = position + 1; nextPosition <= furthestJump; nextPosition++) {
+            if (canJumpFromPosition(nextPosition, nums)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    enum Index {
+        GOOD, BAD, UNKNOWN
+    }
+
+    // Bottom-up dynammic programming
+    public boolean canJump2(int[] nums) {
+        Index[] memo = new Index[nums.length];
+        Arrays.fill(memo, Index.UNKNOWN);
+
+        memo[memo.length - 1] = Index.GOOD;
+
+        for (int i = nums.length - 2; i >= 0; i--) {
+
+            int furthestJump = Math.min(i + nums[i], nums.length - 1);
+            for (int j = i + 1; j <= furthestJump; j++) {
+                if (memo[j] == Index.GOOD) {
+                    memo[i] = Index.GOOD;
+                    break;
+                }
+            }
+        }
+
+        return memo[0] == Index.GOOD;
+    }
+
+    // Greedy algorithm
+    public boolean canJump3(int[] nums) {
+        int lastPos = nums.length - 1;
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (i + nums[i] >= lastPos) {
+                lastPos = i;
+            }
+        }
+
+        return lastPos == 0;
+    }
+
+    /**
+     * Problem on 04/26/2020: Longest Common Subsequence.
+     * <p>
+     * Given two strings text1 and text2, return the length of their longest common subsequence.
+     * <p>
+     * A subsequence of a string is a new string generated from the original string with some
+     * characters(can be none) deleted without changing the relative order of the remaining characters.
+     * (eg, "ace" is a subsequence of "abcde" while "aec" is not). A common subsequence of two strings
+     * is a subsequence that is common to both strings.
+     * <p>
+     * If there is no common subsequence, return 0.
+     *
+     * @param text1 one string
+     * @param text2 another string
+     * @return length of their longest common subsequence
+     */
+
+    public int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length(), n = text2.length();
+        int[][] opt = new int[m + 1][n + 1];
+
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (text1.charAt(i) == text2.charAt(j)) {
+                    opt[i][j] = opt[i + 1][j + 1] + 1;
+                } else {
+                    opt[i][j] = Math.max(opt[i + 1][j], opt[i][j + 1]);
+                }
+            }
+        }
+
+        return opt[0][0];
+    }
+
+    // Recover the Longest common subsequence.
+    public String lcs(String x, String y) {
+        int m = x.length(), n = y.length();
+        int[][] opt = new int[m+1][n+1];
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if (x.charAt(i) == y.charAt(j)) {
+                    opt[i][j] = opt[i+1][j+1] + 1;
+                }
+                else {
+                    opt[i][j] = Math.max(opt[i+1][j], opt[i][j+1]);
+                }
+            }
+        }
+
+        // Recover LCS itself.
+        StringBuilder lcs = new StringBuilder();
+        int i = 0, j = 0;
+        while (i < m && j < n) {
+            if (x.charAt(i) == y.charAt(j)) {
+                lcs.append(x.charAt(i));
+                i++;
+                j++;
+            }
+            else if (opt[i+1][j] >= opt[i][j+1]) i++;
+            else                                 j++;
+        }
+
+        return lcs.toString();
+    }
+
 
     /**
      * Unit tests
@@ -1609,5 +1750,17 @@ public class Leet30April {
         int p23_m = 5, p23_n = 7;
         System.out.printf("The bitwise AND of all numbers in this range between %d and %d is %d\n",
                 p23_m, p23_n, leet30April.rangeBitwiseAnd(p23_m, p23_n));
+
+        System.out.println("\n>>> Problem on 04/25/2020: Jump Game.");
+        int[] p25_nums = {2, 3, 1, 1, 4};
+        System.out.printf("Can jump? %b \n", leet30April.canJump3(p25_nums));
+
+        System.out.println("\n>>> Problem on 04/26/2020: Longest Common Subsequence.");
+        String p26_text1 = "abcde", p26_text2 = "ace";
+        System.out.printf("The length of Longest common subsequence between '%s' and '%s' is %d\n",
+                p26_text1, p26_text2, leet30April.longestCommonSubsequence(p26_text1, p26_text2));
+
+        System.out.printf("The Longest common subsequence between '%s' and '%s' is '%s'\n",
+                p26_text1, p26_text2, leet30April.lcs(p26_text1, p26_text2));
     }
 }

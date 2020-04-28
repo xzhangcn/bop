@@ -16,6 +16,16 @@ Here's what I plan to do for this project:
 - Post miniature programs used to resolve practical problems I met
 - List interesting program challenges and my solutions :smile:
 
+## Why study algorithms?
+
+- Their impact is broad and far-reaching
+- Old roots, new opportunities
+- To solve problems that could not otherwise be addressed
+- For intellectual stimulation
+- To become a proficient programmer
+- They may unlock the secrets of life and of the universe
+- For fun and profit
+
 ## Table of Contents
 
 - [What is it?](#what-is-it)

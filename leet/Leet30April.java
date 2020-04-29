@@ -1684,6 +1684,47 @@ public class Leet30April {
         return max * max;
     }
 
+    /**
+     * Problem on 04/28/2020: First Unique Number.
+     * <p>
+     * You have a queue of integers, you need to retrieve the first unique integer in the queue.
+     *
+     * Implement the FirstUnique class:
+     *
+     * FirstUnique(int[] nums) Initializes the object with the numbers in the queue.
+     * int showFirstUnique() returns the value of the first unique integer of the queue, and returns -1 if there is no such integer.
+     * void add(int value) insert value to the queue.
+     *
+     */
+
+    /**
+     * Problem on 04/29/2020: Binary Tree Maximum Path Sum.
+     * <p>
+     * Given a non-empty binary tree, find the maximum path sum.
+     *
+     * For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree
+     * along the parent-child connections. The path must contain at least one node and does not need to go through the root.
+     *
+     */
+    private int maxSum = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        dfs(root);
+        return maxSum;
+    }
+
+    private int dfs(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        // if left or right subtree is negative sum, we will drop the entire subtree (without adding them to sum)
+        int left = Math.max(0, dfs(root.left));
+        int right = Math.max(0, dfs(root.right));
+        maxSum = Math.max(maxSum, left + root.val + right);
+        return Math.max(left, right) + root.val;
+    }
 
     /**
      * Unit tests
@@ -1864,5 +1905,18 @@ public class Leet30April {
 
         System.out.printf("The area of the maximal sqaure is %d\n", leet30April.maximalSquare(p27_matrix));
 
+        System.out.println("\n>>> Problem on 04/29/2020: Binary Tree Maximum Path Sum.");
+        TreeNode p29_tn1 = new TreeNode(-10);
+        TreeNode p29_tn2 = new TreeNode(9);
+        TreeNode p29_tn3 = new TreeNode(20);
+        TreeNode p29_tn4 = new TreeNode(15);
+        TreeNode p29_tn5 = new TreeNode(7);
+
+        p29_tn1.left = p29_tn2;
+        p29_tn1.right = p29_tn3;
+        p29_tn3.left = p29_tn4;
+        p29_tn3.right = p29_tn5;
+
+        System.out.printf("The Binary Tree Maximum Path Sum is %d\n", leet30April.maxPathSum(p29_tn1));
     }
 }

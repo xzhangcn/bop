@@ -1701,12 +1701,12 @@ public class Leet30April {
      * Problem on 04/29/2020: Binary Tree Maximum Path Sum.
      * <p>
      * Given a non-empty binary tree, find the maximum path sum.
-     *
+     * <p>
      * For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree
      * along the parent-child connections. The path must contain at least one node and does not need to go through the root.
-     *
      */
     private int maxSum = Integer.MIN_VALUE;
+
     public int maxPathSum(TreeNode root) {
         if (root == null)
             return 0;
@@ -1725,6 +1725,45 @@ public class Leet30April {
         maxSum = Math.max(maxSum, left + root.val + right);
         return Math.max(left, right) + root.val;
     }
+
+    /**
+     * Problem on 04/30/2020: Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree.
+     * <p>
+     * Given a binary tree where each path going from the root to any leaf form a valid sequence,
+     * check if a given string is a valid sequence in such binary tree.
+     * <p>
+     * We get the given string from the concatenation of an array of integers arr and the concatenation
+     * of all values of the nodes along a path results in a sequence in the given binary tree.
+     */
+
+
+    private boolean dfs_helper(TreeNode node, int[] arr, int pos) {
+        if (pos > arr.length - 1)
+            return false;
+
+        // leaf
+        if (node.left == null && node.right == null) {
+            return (pos == arr.length - 1 && node.val == arr[pos]);
+        }
+
+        // non-leaf
+        if (node.val != arr[pos])
+            return false;
+
+        boolean flag = false;
+        if (node.left != null)
+            flag = dfs_helper(node.left, arr, pos + 1);
+        
+        if (node.right != null)
+            flag = flag || dfs_helper(node.right, arr, pos + 1);
+
+        return flag;
+    }
+
+    public boolean isValidSequence(TreeNode root, int[] arr) {
+        return dfs_helper(root, arr, 0);
+    }
+
 
     /**
      * Unit tests
@@ -1918,5 +1957,29 @@ public class Leet30April {
         p29_tn3.right = p29_tn5;
 
         System.out.printf("The Binary Tree Maximum Path Sum is %d\n", leet30April.maxPathSum(p29_tn1));
+
+        System.out.println("\n>>> Problem on 04/30/2020: Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree.");
+        TreeNode p30_tn1 = new TreeNode(0);
+        TreeNode p30_tn2 = new TreeNode(1);
+        TreeNode p30_tn3 = new TreeNode(0);
+        TreeNode p30_tn4 = new TreeNode(0);
+        TreeNode p30_tn5 = new TreeNode(1);
+        TreeNode p30_tn6 = new TreeNode(0);
+        TreeNode p30_tn7 = new TreeNode(1);
+        TreeNode p30_tn8 = new TreeNode(0);
+        TreeNode p30_tn9 = new TreeNode(0);
+
+        p30_tn1.left = p30_tn2;
+        p30_tn1.right = p30_tn3;
+        p30_tn2.left = p30_tn4;
+        p30_tn2.right = p30_tn5;
+        p30_tn3.left = p30_tn6;
+        p30_tn4.right = p30_tn7;
+        p30_tn5.left = p30_tn8;
+        p30_tn5.right = p30_tn9;
+
+        int[] p30_nums = {0, 1, 0, 1};
+        System.out.printf("A string is a Valid Sequence from Root to Leaves Path in a Binary Tree? %b\n",
+                leet30April.isValidSequence(p30_tn1, p30_nums));
     }
 }

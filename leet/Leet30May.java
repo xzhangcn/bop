@@ -155,6 +155,22 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/04/2020: Number Complement.
+     * <p>
+     * Given a positive integer, output its complement number. The complement strategy is to flip the bits of its binary representation.
+     *
+     * @param num a positive integer
+     * @return the complement number
+     */
+    public int findComplement(int num) {
+        int X = 1;
+        while (num > X)
+            X = X * 2 + 1;
+
+        return X - num;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -174,5 +190,9 @@ public class Leet30May {
         String p3_ransomNote = "aa", p3_maganize = "aab";
         System.out.printf("If the ransom note can be constructed from the magazines? %b\n",
                 leet30May.canConstruct(p3_ransomNote, p3_maganize));
+
+        System.out.println("\n>>> Problem on the day of 05/04/2020: Number Complement.");
+        int p4_num = 5;
+        System.out.printf("The complement of %d is %d\n", p4_num, leet30May.findComplement(p4_num));
     }
 }

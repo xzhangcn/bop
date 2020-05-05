@@ -171,6 +171,66 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/05/2020: First Unique Character in a String.
+     * <p>
+     * Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.
+     *
+     * @param s a string
+     * @return the index of first non-repeating character in a string
+     */
+    public int firstUniqChar(String s) {
+        if (s.length() == 0)
+            return -1;
+
+        char letter;
+        Map<Character, Integer> map = new HashMap<>();
+
+        // build hash map : character and how often it appears
+        for (int i = 0; i < s.length(); i++) {
+            letter = s.charAt(i);
+
+            if (!map.containsKey(letter))
+                map.put(letter, 1);
+            else
+                map.put(letter, map.get(letter) + 1);
+        }
+
+        Set<Character> set = new HashSet<>();
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            letter = entry.getKey();
+            if (map.get(letter) == 1)
+                set.add(letter);
+        }
+
+        // find the index
+        for (int i = 0; i < s.length(); i++)
+            if (set.contains(s.charAt(i)))
+                return i;
+
+        return -1;
+    }
+
+    // Similar approach to the one above, but more concise and without using HashSet
+    public int firstUniqChar2(String s) {
+        HashMap<Character, Integer> count = new HashMap<>();
+        int n = s.length();
+
+        // build hash map : character and how often it appears
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            count.put(c, count.getOrDefault(c, 0) + 1);
+        }
+
+        // find the index
+        for (int i = 0; i < n; i++) {
+            if (count.get(s.charAt(i)) == 1)
+                return i;
+        }
+
+        return -1;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -194,5 +254,9 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/04/2020: Number Complement.");
         int p4_num = 5;
         System.out.printf("The complement of %d is %d\n", p4_num, leet30May.findComplement(p4_num));
+
+        System.out.println("\n>>> Problem on the day of 05/05/2020: First Unique Character in a String.");
+        String p5_s = "loveleetcode";
+        System.out.printf("The index of first unique character in '%s' is %d\n", p5_s, leet30May.firstUniqChar(p5_s));
     }
 }

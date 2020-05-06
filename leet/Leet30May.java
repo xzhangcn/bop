@@ -231,6 +231,32 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/06/2020: Majority Element.
+     * <p>
+     * Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+     * <p>
+     * You may assume that the array is non-empty and the majority element always exist in the array.
+     *
+     * @param nums an array of integers
+     * @return the majority element
+     */
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            counts.put(num, counts.getOrDefault(num, 0) + 1);
+        }
+
+        Map.Entry<Integer, Integer> majorityEntry = null;
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+            if (majorityEntry == null || entry.getValue() > majorityEntry.getValue())
+                majorityEntry = entry;
+        }
+
+        return majorityEntry.getKey();
+    }
+
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -258,5 +284,9 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/05/2020: First Unique Character in a String.");
         String p5_s = "loveleetcode";
         System.out.printf("The index of first unique character in '%s' is %d\n", p5_s, leet30May.firstUniqChar(p5_s));
+
+        System.out.println("\n>>> Problem on the day of 05/06/2020: Majority Element.");
+        int[] p6_nums = {2, 2, 1, 1, 1, 2, 2};
+        System.out.printf("The majority element is %d\n", leet30May.majorityElement(p6_nums));
     }
 }

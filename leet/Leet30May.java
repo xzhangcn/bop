@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * created:    2019/05/01
@@ -255,6 +252,63 @@ public class Leet30May {
         return majorityEntry.getKey();
     }
 
+    /**
+     * Problem on the day of 05/07/2020: Cousins in Binary Tree.
+     * <p>
+     * In a binary tree, the root node is at depth 0, and children of each depth k node are at depth k+1.
+     *
+     * Two nodes of a binary tree are cousins if they have the same depth, but have different parents.
+     *
+     * We are given the root of a binary tree with unique values, and the values x and y of two different nodes in the tree.
+     *
+     * Return true if and only if the nodes corresponding to the values x and y are cousins.
+     *
+     * @param root root of a binary tree
+     * @param x one value
+     * @param y another value
+     * @return true if and only if the nodes corresponding to the values x and y are cousins
+     */
+    public boolean isCousins(TreeNode root, int x, int y) {
+        if (root == null)
+            return false;
+
+        // run bfs on the binary tree
+        java.util.Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+
+            int size = queue.size();
+            boolean isAexist = false;
+            boolean isBexist = false;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = queue.poll();
+                if (cur.val == x)
+                    isAexist = true;
+                if (cur.val == y)
+                    isBexist = true;
+
+                if (cur.left != null && cur.right != null) {
+                    if (cur.left.val == x && cur.right.val == y)
+                        return false;
+
+                    if (cur.left.val == y && cur.right.val == x)
+                        return false;
+                }
+
+                if (cur.left != null)
+                    queue.offer(cur.left);
+
+                if (cur.right != null)
+                    queue.offer(cur.right);
+            }
+
+            if (isAexist && isBexist)
+                return true;
+        }
+
+        return false;
+    }
 
     /**
      * Unit tests
@@ -288,5 +342,21 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/06/2020: Majority Element.");
         int[] p6_nums = {2, 2, 1, 1, 1, 2, 2};
         System.out.printf("The majority element is %d\n", leet30May.majorityElement(p6_nums));
+
+        System.out.println("\n>>> Problem on the day of 05/07/2020: Cousins in Binary Tree.");
+        TreeNode p7_tn1 = new TreeNode(1);
+        TreeNode p7_tn2 = new TreeNode(2);
+        TreeNode p7_tn3 = new TreeNode(3);
+        TreeNode p7_tn4 = new TreeNode(4);
+        TreeNode p7_tn5 = new TreeNode(5);
+
+        p7_tn1.left = p7_tn2;
+        p7_tn1.right = p7_tn3;
+        p7_tn2.right = p7_tn4;
+        p7_tn3.right = p7_tn5;
+
+        int p7_x = 4, p7_y = 5;
+        System.out.printf("Are nodes with value %d and %d cousin? %b\n",
+                p7_x, p7_y, leet30May.isCousins(p7_tn1, p7_x, p7_y));
     }
 }

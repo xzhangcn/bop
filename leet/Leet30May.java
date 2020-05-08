@@ -256,16 +256,16 @@ public class Leet30May {
      * Problem on the day of 05/07/2020: Cousins in Binary Tree.
      * <p>
      * In a binary tree, the root node is at depth 0, and children of each depth k node are at depth k+1.
-     *
+     * <p>
      * Two nodes of a binary tree are cousins if they have the same depth, but have different parents.
-     *
+     * <p>
      * We are given the root of a binary tree with unique values, and the values x and y of two different nodes in the tree.
-     *
+     * <p>
      * Return true if and only if the nodes corresponding to the values x and y are cousins.
      *
      * @param root root of a binary tree
-     * @param x one value
-     * @param y another value
+     * @param x    one value
+     * @param y    another value
      * @return true if and only if the nodes corresponding to the values x and y are cousins
      */
     public boolean isCousins(TreeNode root, int x, int y) {
@@ -308,6 +308,32 @@ public class Leet30May {
         }
 
         return false;
+    }
+
+    /**
+     * Problem on the day of 05/08/2020: Check If It Is a Straight Line.
+     * <p>
+     * You are given an array coordinates, coordinates[i] = [x, y], where [x, y] represents the coordinate of a point.
+     * Check if these points make a straight line in the XY plane.
+     *
+     * @param coordinates an array of coordinates
+     * @return true if all coordinates are in a straight line
+     */
+    public boolean checkStraightLine(int[][] coordinates) {
+        if (coordinates == null || coordinates.length < 3 || coordinates[0].length == 0)
+            return false;
+
+        int[] p = coordinates[0];
+        int[] q = coordinates[1];
+
+        for (int i = 2; i < coordinates.length; i++) {
+            int[] curr = coordinates[i];
+
+            if ((curr[0] - p[0]) * (q[1] - p[1]) != (curr[1] - p[1]) * (q[0] - p[0]))
+                return false;
+        }
+
+        return true;
     }
 
     /**
@@ -358,5 +384,9 @@ public class Leet30May {
         int p7_x = 4, p7_y = 5;
         System.out.printf("Are nodes with value %d and %d cousin? %b\n",
                 p7_x, p7_y, leet30May.isCousins(p7_tn1, p7_x, p7_y));
+
+        System.out.println("\n>>> Problem on the day of 05/08/2020: Check If It Is a Straight Line.");
+        int[][] p8_coordinates = {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}};
+        System.out.printf("All coordinates are on a straight line? %b\n", leet30May.checkStraightLine(p8_coordinates));
     }
 }

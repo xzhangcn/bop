@@ -337,6 +337,44 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/09/2020: Valid Perfect Square.
+     * <p>
+     * Given a positive integer num, write a function which returns True if num is a perfect square else False.
+     *
+     * Note: Do not use any built-in library function such as sqrt.
+     *
+     * @param num a positive integer
+     * @return true if num is a perfect square else false
+     */
+    public boolean isPerfectSquare(int num) {
+        int i = 1;
+        while (num > 0) {
+            num -= i;
+            i += 2;
+        }
+        return num == 0;
+    }
+
+    // Use binary search
+    public boolean isPerfectSquare2(int num) {
+        if (num <= 0)
+            return false;
+
+        int lo = 1, hi = num / 2;
+
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+
+            if (num / mid > mid)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+
+        return lo * lo == num;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -388,5 +426,9 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/08/2020: Check If It Is a Straight Line.");
         int[][] p8_coordinates = {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}};
         System.out.printf("All coordinates are on a straight line? %b\n", leet30May.checkStraightLine(p8_coordinates));
+
+        System.out.println("\n>>> Problem on the day of 05/09/2020: Valid Perfect Square.");
+        int p9_num = 16;
+        System.out.printf("Is %d a perfect square? %b\n", p9_num, leet30May.isPerfectSquare2(p9_num));
     }
 }

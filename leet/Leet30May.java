@@ -340,7 +340,7 @@ public class Leet30May {
      * Problem on the day of 05/09/2020: Valid Perfect Square.
      * <p>
      * Given a positive integer num, write a function which returns True if num is a perfect square else False.
-     *
+     * <p>
      * Note: Do not use any built-in library function such as sqrt.
      *
      * @param num a positive integer
@@ -373,6 +373,48 @@ public class Leet30May {
 
         return lo * lo == num;
     }
+
+    /**
+     * Problem on the day of 05/10/2020: Find the Town Judge.
+     * <p>
+     * In a town, there are N people labelled from 1 to N.  There is a rumor that one of these people is secretly the town judge.
+     * <p>
+     * If the town judge exists, then:
+     * <p>
+     * The town judge trusts nobody.
+     * Everybody (except for the town judge) trusts the town judge.
+     * There is exactly one person that satisfies properties 1 and 2.
+     * You are given trust, an array of pairs trust[i] = [a, b] representing that the person labelled a trusts the person labelled b.
+     * <p>
+     * If the town judge exists and can be identified, return the label of the town judge.  Otherwise, return -1.
+     * <p>
+     * Intuition:
+     * Consider trust as a graph, all pairs are directed edge.
+     * The point with in-degree - out-degree = N - 1 become the judge.
+     * <p>
+     * Explanation:
+     * Count the degree, and check at the end.
+     *
+     * @param N     number of people
+     * @param trust an array of trust pair
+     * @return the label of the town judge, otherwise return -1.
+     */
+    public int findJudge(int N, int[][] trust) {
+        int[] count = new int[N + 1];
+
+        for (int[] t : trust) {
+            count[t[0]]--;
+            count[t[1]]++;
+        }
+
+        for (int i = 1; i <= N; i++) {
+            if (count[i] == N - 1)
+                return i;
+        }
+
+        return -1;
+    }
+
 
     /**
      * Unit tests
@@ -430,5 +472,10 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/09/2020: Valid Perfect Square.");
         int p9_num = 16;
         System.out.printf("Is %d a perfect square? %b\n", p9_num, leet30May.isPerfectSquare2(p9_num));
+
+        System.out.println("\n>>> Problem on the day of 05/10/2020: Find the Town Judge.");
+        int p10_N = 3;
+        int[][] p10_trust = {{1, 3}, {2, 3}, {3, 1}};
+        System.out.printf("The town judge is %d\n", leet30May.findJudge(p10_N, p10_trust));
     }
 }

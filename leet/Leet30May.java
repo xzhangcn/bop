@@ -463,7 +463,7 @@ public class Leet30May {
         }
     }
 
-    // bfs solution to the above problem
+    // use bfs solution to the above problem
     public int[][] floodFill2(int[][] image, int sr, int sc, int newColor) {
         if (image[sr][sc] == newColor)
             return image;

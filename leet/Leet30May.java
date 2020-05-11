@@ -390,7 +390,7 @@ public class Leet30May {
      * <p>
      * Intuition:
      * Consider trust as a graph, all pairs are directed edge.
-     * The point with in-degree - out-degree = N - 1 become the judge.
+     * The point who has no out-degree and in-degree == N - 1 is the judge.
      * <p>
      * Explanation:
      * Count the degree, and check at the end.
@@ -415,6 +415,86 @@ public class Leet30May {
         return -1;
     }
 
+    /**
+     * Problem on the day of 05/11/2020: Flood Fill.
+     * <p>
+     * An image is represented by a 2-D array of integers, each integer representing the pixel value of the image (from 0 to 65535).
+     * <p>
+     * Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill,
+     * and a pixel value newColor, "flood fill" the image.
+     * <p>
+     * To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally
+     * to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally
+     * to those pixels (also with the same color as the starting pixel), and so on. Replace the color of all of
+     * the aforementioned pixels with the newColor.
+     * <p>
+     * At the end, return the modified image.
+     *
+     * @param image    a 2-D array of integers
+     * @param sr       source row
+     * @param sc       source col
+     * @param newColor new color to flood
+     * @return the modified image.
+     */
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        if (image[sr][sc] == newColor)
+            return image;
+
+        int color = image[sr][sc];
+        dfs(image, sr, sc, newColor, color);
+
+        return image;
+    }
+
+    private void dfs(int[][] image, int sr, int sc, int newColor, int color) {
+        // base case
+        if (sr < 0 || sr >= image.length || sc < 0 || sc >= image[0].length || image[sr][sc] != color)
+            return;
+
+        image[sr][sc] = newColor;
+        // Initiate a directions array
+        int[][] dirs = new int[][]{{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+
+        for (int[] dir : dirs) {
+            int i = dir[0] + sr;
+            int j = dir[1] + sc;
+
+            dfs(image, i, j, newColor, color);  // recurse on all neighbors.
+        }
+    }
+
+    // bfs solution to the above problem
+    public int[][] floodFill2(int[][] image, int sr, int sc, int newColor) {
+        if (image[sr][sc] == newColor)
+            return image;
+
+        java.util.Queue<int[]> q = new LinkedList<>();
+        int color = image[sr][sc];
+        boolean[][] visited = new boolean[image.length][image[0].length];
+
+        // put your starting cell in the queue
+        q.add(new int[]{sr, sc});
+        visited[sr][sc] = true;
+
+        int[][] dirs = new int[][]{{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+            image[curr[0]][curr[1]] = newColor;
+
+            // iterate on all possible directions
+            for (int[] dir : dirs) {
+                int i = dir[0] + curr[0];
+                int j = dir[1] + curr[1];
+                if (i >= 0 && i < image.length && j >= 0 && j < image[0].length && image[i][j] == color && !visited[i][j]) {
+                    q.add(new int[]{i, j});
+                    visited[i][j] = true;
+                }
+            }
+        }
+
+        return image;
+    }
 
     /**
      * Unit tests
@@ -477,5 +557,11 @@ public class Leet30May {
         int p10_N = 3;
         int[][] p10_trust = {{1, 3}, {2, 3}, {3, 1}};
         System.out.printf("The town judge is %d\n", leet30May.findJudge(p10_N, p10_trust));
+
+        System.out.println("\n>>> Problem on the day of 05/11/2020: Flood Fill.");
+        int[][] p11_image = {{1, 1, 1}, {1, 1, 0}, {1, 0, 1}};
+        int p11_sr = 1, p11_sc = 1, p11_newColor = 2;
+        int[][] p12_newImage = leet30May.floodFill2(p11_image, p11_sr, p11_sc, p11_newColor);
+        System.out.println(Arrays.deepToString(p12_newImage));
     }
 }

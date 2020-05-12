@@ -497,6 +497,45 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/12/2020: Single Element in a Sorted Array.
+     * <p>
+     * You are given a sorted array consisting of only integers where every element appears exactly twice,
+     * except for one element which appears exactly once. Find this single element that appears only once.
+     *
+     * @param nums an array of integers
+     * @return the single element
+     */
+    public int singleNonDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+
+        for (int num : nums) {
+            if (set.contains(num))
+                set.remove(num);
+            else
+                set.add(num);
+        }
+
+        Iterator iterator = set.iterator();
+
+        return (Integer) iterator.next();
+    }
+
+    /**
+     * Approach 2 for the problem above
+     * Bit manipulation.
+     * If we take XOR of zero and some bit, it will return that bit;
+     * If we take XOR of two same bits, it will return 0.
+     * we can XOR all bits together to find the unique number.
+     */
+    public int singleNonDuplicate2(int[] nums) {
+        int a = 0;
+        for (int num : nums)
+            a ^= num;
+
+        return a;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -563,5 +602,9 @@ public class Leet30May {
         int p11_sr = 1, p11_sc = 1, p11_newColor = 2;
         int[][] p12_newImage = leet30May.floodFill2(p11_image, p11_sr, p11_sc, p11_newColor);
         System.out.println(Arrays.deepToString(p12_newImage));
+
+        System.out.println("\n>>> Problem on the day of 05/12/2020: Single Element in a Sorted Array.");
+        int[] p12_nums = {1, 1, 2, 3, 3, 4, 4, 8, 8};
+        System.out.printf("The single element in th array is %d\n", leet30May.singleNonDuplicate(p12_nums));
     }
 }

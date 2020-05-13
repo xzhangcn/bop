@@ -536,6 +536,60 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/13/2020: Remove K Digits.
+     * <p>
+     * Given a non-negative integer num represented as a string, remove k digits from the number so that the new number is the smallest possible.
+     * <p>
+     * Note:
+     * The length of num is less than 10002 and will be ≥ k.
+     * The given num does not contain any leading zero.
+     *
+     * Useful resource:
+     * https://leetcode.com/problems/sum-of-subarray-minimums/discuss/178876/stack-solution-with-very-detailed-explanation-step-by-step
+     *
+     * @param num a non-negative integer
+     * @param k   number of digits to be removed
+     * @return the smallest possible integer
+     */
+    public String removeKdigits(String num, int k) {
+        int len = num.length();
+
+        if (k >= len)
+            return "0";
+
+        Deque<Character> stack = new ArrayDeque<>();
+        int i = 0;
+        while (i < num.length()) {
+            // whenever meet a digit which is less than the previous digit, discard the previous one
+            while (k > 0 && !stack.isEmpty() && stack.peek() > num.charAt(i)) {
+                stack.pop();
+                k--;
+            }
+
+            stack.push(num.charAt(i));
+            i++;
+        }
+
+        // 1. in case of 11111 (duplicate)
+        // 2. in case of 12345 (ascending order number)
+        while (k > 0) {
+            stack.pop();
+            k--;
+        }
+
+        // construct the number from the stack
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty())
+            sb.append(stack.pop());
+
+        // remove all the 0 at the tail
+        while(sb.length() > 1 && sb.charAt(sb.length()-1) == '0')
+            sb.deleteCharAt(sb.length()-1);
+
+        return sb.reverse().toString();
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -606,5 +660,11 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/12/2020: Single Element in a Sorted Array.");
         int[] p12_nums = {1, 1, 2, 3, 3, 4, 4, 8, 8};
         System.out.printf("The single element in th array is %d\n", leet30May.singleNonDuplicate(p12_nums));
+
+        System.out.println("\n>>> Problem on the day of 05/13/2020: Remove K Digits.");
+        String p13_num = "1432219";
+        int p13_k = 3;
+        System.out.printf("The smallest possible integer after removing %d digits is %s\n",
+                p13_k, leet30May.removeKdigits(p13_num, p13_k));
     }
 }

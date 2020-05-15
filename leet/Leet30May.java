@@ -543,7 +543,7 @@ public class Leet30May {
      * Note:
      * The length of num is less than 10002 and will be ≥ k.
      * The given num does not contain any leading zero.
-     *
+     * <p>
      * Useful resource:
      * https://leetcode.com/problems/sum-of-subarray-minimums/discuss/178876/stack-solution-with-very-detailed-explanation-step-by-step
      *
@@ -583,10 +583,41 @@ public class Leet30May {
             sb.append(stack.pop());
 
         // remove all the 0 at the tail
-        while(sb.length() > 1 && sb.charAt(sb.length()-1) == '0')
-            sb.deleteCharAt(sb.length()-1);
+        while (sb.length() > 1 && sb.charAt(sb.length() - 1) == '0')
+            sb.deleteCharAt(sb.length() - 1);
 
         return sb.reverse().toString();
+    }
+
+    /**
+     * Problem on the day of 05/14/2020: Implement Trie (Prefix Tree).
+     */
+
+    /**
+     * Problem on the day of 05/15/2020: Maximum Sum Circular Subarray.
+     * <p>
+     * Given a circular array C of integers represented by A, find the maximum possible sum of a non-empty subarray of C.
+     * <p>
+     * Here, a circular array means the end of the array connects to the beginning of the array.
+     * (Formally, C[i] = A[i] when 0 <= i < A.length, and C[i+A.length] = C[i] when i >= 0.)
+     * <p>
+     * Also, a subarray may only include each element of the fixed buffer A at most once.
+     * (Formally, for a subarray C[i], C[i+1], ..., C[j], there does not exist i <= k1, k2 <= j with k1 % A.length = k2 % A.length.)
+     *
+     * @param A an array of integer
+     * @return maximum possible sum of a non-empty subarray of circular array
+     */
+    public int maxSubarraySumCircular(int[] A) {
+        int total = 0, maxSum = -30000, curMax = 0, minSum = 30000, curMin = 0;
+
+        for (int a : A) {
+            curMax = Math.max(curMax + a, a);
+            maxSum = Math.max(maxSum, curMax);
+            curMin = Math.min(curMin + a, a);
+            minSum = Math.min(minSum, curMin);
+            total += a;
+        }
+        return maxSum > 0 ? Math.max(maxSum, total - minSum) : maxSum;
     }
 
     /**
@@ -666,5 +697,9 @@ public class Leet30May {
         int p13_k = 3;
         System.out.printf("The smallest possible integer after removing %d digits is %s\n",
                 p13_k, leet30May.removeKdigits(p13_num, p13_k));
+
+        System.out.println("\n>>> Problem on the day of 05/15/2020: Maximum Sum Circular Subarray.");
+        int[] p15_nums = {5, -3, 5};
+        System.out.printf("Maximum Sum Circular Subarray is %d\n", leet30May.maxSubarraySumCircular(p15_nums));
     }
 }

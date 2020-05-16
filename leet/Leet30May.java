@@ -621,6 +621,39 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/16/2020: Odd Even Linked List.
+     * <p>
+     * Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here
+     * we are talking about the node number and not the value in the nodes.
+     *
+     * You should try to do it in place. The program should run in O(1) space complexity and O(nodes) time complexity.
+     *
+     * Note:
+     * The relative order inside both the even and odd groups should remain as it was in the input.
+     * The first node is considered odd, the second node even and so on ...
+     *
+     * @param head the head of a linked list
+     * @return the head of revised linked list
+     */
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null)
+            return null;
+
+        ListNode odd = head, even = head.next, evenHead = even;
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+
+        odd.next = evenHead;
+
+        return head;
+    }
+
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -701,5 +734,26 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/15/2020: Maximum Sum Circular Subarray.");
         int[] p15_nums = {5, -3, 5};
         System.out.printf("Maximum Sum Circular Subarray is %d\n", leet30May.maxSubarraySumCircular(p15_nums));
+
+        System.out.println("\n>>> Problem on the day of 05/16/2020: Odd Even Linked List.");
+        ListNode p15_A1 = new ListNode(1);
+        ListNode p15_A2 = new ListNode(2);
+        ListNode p15_A3 = new ListNode(3);
+        ListNode p15_A4 = new ListNode(4);
+        ListNode p15_A5 = new ListNode(5);
+
+        p15_A1.next = p15_A2;
+        p15_A2.next = p15_A3;
+        p15_A3.next = p15_A4;
+        p15_A4.next = p15_A5;
+
+        ListNode p15_cur = leet30May.oddEvenList(p15_A1);
+        while (p15_cur != null) {
+            System.out.printf("%d\t", p15_cur.val);
+            p15_cur = p15_cur.next;
+        }
+        System.out.println();
+
+        
     }
 }

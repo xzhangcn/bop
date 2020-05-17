@@ -625,9 +625,9 @@ public class Leet30May {
      * <p>
      * Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here
      * we are talking about the node number and not the value in the nodes.
-     *
+     * <p>
      * You should try to do it in place. The program should run in O(1) space complexity and O(nodes) time complexity.
-     *
+     * <p>
      * Note:
      * The relative order inside both the even and odd groups should remain as it was in the input.
      * The first node is considered odd, the second node even and so on ...
@@ -652,6 +652,67 @@ public class Leet30May {
         return head;
     }
 
+    /**
+     * Problem on the day of 05/17/2020: Find All Anagrams in a String.
+     * <p>
+     * Given a string s and a non-empty string p, find all the start indices of p's anagrams in s.
+     * <p>
+     * Strings consists of lowercase English letters only and the length of both strings s and p will not be larger than 20,100.
+     * <p>
+     * The order of output does not matter.
+     *
+     * @param s a string
+     * @param p another string
+     * @return all the start indices of p's anagrams in s
+     */
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> list = new ArrayList<>();
+        if (s == null || s.length() == 0 || p == null || p.length() == 0)
+            return list;
+
+        int[] hash = new int[256];  // character hash
+
+        // record each character in p to hash
+        for (char c : p.toCharArray()) {
+            hash[c]++;
+        }
+
+        // two points, initialize count to p's length
+        int left = 0, right = 0, count = p.length();
+
+        while (right < s.length()) {
+            // move right everytime, if the character exists in p's hash, decrease the count
+            // current hash value >= 1 means the character is existing in p
+            if (hash[s.charAt(right)] >= 1) {
+                count--;
+            }
+
+            hash[s.charAt(right)]--;
+            right++;
+
+            // when the count is down to 0, means we found the right anagram
+            // then add window's left to result list
+            if (count == 0) {
+                list.add(left);
+            }
+
+            // if we find the window's size equals to p, then we have to move left (narrow the window) to find the new match window
+            // ++ to reset the hash because we kicked out the left
+            // only increase the count if the character is in p
+            // the count >= 0 indicate it was original in the hash, cuz it won't go below 0
+            if (right - left == p.length()) {
+
+                if (hash[s.charAt(left)] >= 0) {
+                    count++;
+                }
+
+                hash[s.charAt(left)]++;
+                left++;
+            }
+        }
+
+        return list;
+    }
 
     /**
      * Unit tests
@@ -736,24 +797,28 @@ public class Leet30May {
         System.out.printf("Maximum Sum Circular Subarray is %d\n", leet30May.maxSubarraySumCircular(p15_nums));
 
         System.out.println("\n>>> Problem on the day of 05/16/2020: Odd Even Linked List.");
-        ListNode p15_A1 = new ListNode(1);
-        ListNode p15_A2 = new ListNode(2);
-        ListNode p15_A3 = new ListNode(3);
-        ListNode p15_A4 = new ListNode(4);
-        ListNode p15_A5 = new ListNode(5);
+        ListNode p16_A1 = new ListNode(1);
+        ListNode p16_A2 = new ListNode(2);
+        ListNode p16_A3 = new ListNode(3);
+        ListNode p16_A4 = new ListNode(4);
+        ListNode p16_A5 = new ListNode(5);
 
-        p15_A1.next = p15_A2;
-        p15_A2.next = p15_A3;
-        p15_A3.next = p15_A4;
-        p15_A4.next = p15_A5;
+        p16_A1.next = p16_A2;
+        p16_A2.next = p16_A3;
+        p16_A3.next = p16_A4;
+        p16_A4.next = p16_A5;
 
-        ListNode p15_cur = leet30May.oddEvenList(p15_A1);
-        while (p15_cur != null) {
-            System.out.printf("%d\t", p15_cur.val);
-            p15_cur = p15_cur.next;
+        ListNode p16_cur = leet30May.oddEvenList(p16_A1);
+        while (p16_cur != null) {
+            System.out.printf("%d\t", p16_cur.val);
+            p16_cur = p16_cur.next;
         }
         System.out.println();
 
-        
+        System.out.println("\n>>> Problem on the day of 05/17/2020: Find All Anagrams in a String.");
+        String p17_s = "cbaebabacd", p17_p = "abc";
+        List<Integer> p17_res = leet30May.findAnagrams(p17_s, p17_p);
+        System.out.println(p17_res);
+
     }
 }

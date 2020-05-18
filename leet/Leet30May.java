@@ -715,6 +715,51 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/18/2020: Permutation in String.
+     * <p>
+     * Given two strings s1 and s2, write a function to return true if s2 contains the permutation of s1.
+     * In other words, one of the first string's permutations is the substring of the second string.
+     *
+     * @param s1 a string
+     * @param s2 another string
+     * @return true if s2 contains the permutation of s1
+     */
+    public boolean checkInclusion(String s1, String s2) {
+        int[] map = new int[26];
+        int sum = s1.length();
+
+        // construct frequency map
+        for (int i = 0; i < s1.length(); i++) {
+            map[s1.charAt(i) - 'a']++;
+        }
+
+        for (int r = 0, l = 0; r < s2.length(); r++) {
+            char c = s2.charAt(r);
+            if (map[c - 'a'] > 0) {
+                map[c - 'a']--;
+                sum--;
+
+                //check for permutation match.
+                if (sum == 0)
+                    return true;
+
+            } else {
+                // if there is enough number for char c or c is never seen before, we move left pointer next to the position
+                // where we first saw char c or to the r+1(we never see char c before), and during this process we restore the map.
+                while (l <= r && s2.charAt(l) != s2.charAt(r)) {
+                    map[s2.charAt(l) - 'a']++;
+                    l++;
+                    sum++;
+                }
+
+                l++;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -819,6 +864,10 @@ public class Leet30May {
         String p17_s = "cbaebabacd", p17_p = "abc";
         List<Integer> p17_res = leet30May.findAnagrams(p17_s, p17_p);
         System.out.println(p17_res);
+
+        System.out.println("\n>>> Problem on the day of 05/18/2020: Permutation in String.");
+        String p18_s1 = "ab", p18_s2 = "eidbaooo";
+        System.out.printf("'%s' contains the permutation of '%s' ? %b \n", p18_s2, p18_s1, leet30May.checkInclusion(p18_s1, p18_s2));
 
     }
 }

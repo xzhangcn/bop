@@ -760,6 +760,43 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/19/2020: Online Stock Span.
+     */
+
+    /**
+     * Problem on the day of 05/20/2020: Kth Smallest Element in a BST.
+     * <p>
+     * Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+     *
+     * Note:
+     * You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+     *
+     * @param root root of a BST
+     * @param k kth smallest
+     * @return the kth smallest element in it
+     */
+    public int kthSmallest(TreeNode root, int k) {
+        Deque<TreeNode> stack = new ArrayDeque<>();
+
+        stack.push(root);
+        while(!stack.isEmpty()) {
+
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+
+            root = stack.pop();
+            if (--k == 0)
+                return root.val;
+
+            root = root.right;
+        }
+
+        return -1;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -868,6 +905,18 @@ public class Leet30May {
         System.out.println("\n>>> Problem on the day of 05/18/2020: Permutation in String.");
         String p18_s1 = "ab", p18_s2 = "eidbaooo";
         System.out.printf("'%s' contains the permutation of '%s' ? %b \n", p18_s2, p18_s1, leet30May.checkInclusion(p18_s1, p18_s2));
+
+        System.out.println("\n>>> Problem on 05/20/2020: Kth Smallest Element in a BST.");
+        TreeNode p20_tn1 = new TreeNode(3);
+        TreeNode p20_tn2 = new TreeNode(1);
+        TreeNode p20_tn3 = new TreeNode(4);
+        TreeNode p20_tn4 = new TreeNode(2);
+        p20_tn1.left = p20_tn2;
+        p20_tn1.right = p20_tn3;
+        p20_tn2.right = p20_tn4;
+
+        int p20_k = 2;
+        System.out.printf("The %dth smallest element in the BST is %d\n", p20_k, leet30May.kthSmallest(p20_tn1, p20_k));
 
     }
 }

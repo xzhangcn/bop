@@ -236,6 +236,30 @@ public class LeetTree {
         return node;
     }
 
+    /**
+     * @param root root of a BST
+     * @return the list of inorder traversal
+     */
+    public List<Integer> preOrderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+
+        preOrderTraversalHelper(root, result);
+        return result;
+    }
+
+    /**
+     * @param node root of a BST
+     * @param list the list to store of inorder traversal result
+     */
+    private void preOrderTraversalHelper(TreeNode node, List<Integer> list) {
+        if (node == null)   // base case
+            return;
+
+        list.add(node.val);
+        preOrderTraversalHelper(node.left, list);
+        preOrderTraversalHelper(node.right, list);
+    }
+
 
     /**
      * @param root root of a BST
@@ -259,6 +283,30 @@ public class LeetTree {
         inOrderTraversalHelper(node.left, list);
         list.add(node.val);
         inOrderTraversalHelper(node.right, list);
+    }
+
+    /**
+     * @param root root of a BST
+     * @return the list of inorder traversal
+     */
+    public List<Integer> postOrderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+
+        postOrderTraversalHelper(root, result);
+        return result;
+    }
+
+    /**
+     * @param node root of a BST
+     * @param list the list to store of inorder traversal result
+     */
+    private void postOrderTraversalHelper(TreeNode node, List<Integer> list) {
+        if (node == null)   // base case
+            return;
+
+        postOrderTraversalHelper(node.left, list);
+        postOrderTraversalHelper(node.right, list);
+        list.add(node.val);
     }
 
     /**

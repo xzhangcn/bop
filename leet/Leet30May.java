@@ -767,19 +767,19 @@ public class Leet30May {
      * Problem on the day of 05/20/2020: Kth Smallest Element in a BST.
      * <p>
      * Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
-     *
+     * <p>
      * Note:
      * You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
      *
      * @param root root of a BST
-     * @param k kth smallest
+     * @param k    kth smallest
      * @return the kth smallest element in it
      */
     public int kthSmallest(TreeNode root, int k) {
         Deque<TreeNode> stack = new ArrayDeque<>();
 
         stack.push(root);
-        while(!stack.isEmpty()) {
+        while (!stack.isEmpty()) {
 
             while (root != null) {
                 stack.push(root);
@@ -794,6 +794,30 @@ public class Leet30May {
         }
 
         return -1;
+    }
+
+    /**
+     * Problem on the day of 05/21/2020:Count Square Sub-matrices with All Ones.
+     * <p>
+     * Given a m * n matrix of ones and zeros, return how many square sub-matrices have all ones.
+     *
+     * @param matrix a matrix of ones and zeros
+     * @return how many square sub-matrices have all ones
+     */
+    public int countSquares(int[][] matrix) {
+        int res = 0;
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] > 0 && i > 0 && j > 0) {
+                    matrix[i][j] = Math.min(matrix[i - 1][j - 1], Math.min(matrix[i - 1][j], matrix[i][j - 1])) + 1;
+                }
+
+                res += matrix[i][j];
+            }
+        }
+
+        return res;
     }
 
     /**
@@ -917,6 +941,10 @@ public class Leet30May {
 
         int p20_k = 2;
         System.out.printf("The %dth smallest element in the BST is %d\n", p20_k, leet30May.kthSmallest(p20_tn1, p20_k));
+
+        System.out.println("\n>>> Problem on 05/21/2020: Count Square Sub-matrices with All Ones。");
+        int[][] p21_matrix = {{0,1,1,1}, {1,1,1,1}, {0,1,1,1}};
+        System.out.printf("Count Square Sub-matrices with All Ones: %d\n", leet30May.countSquares(p21_matrix));
 
     }
 }

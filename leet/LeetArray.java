@@ -554,6 +554,27 @@ public class LeetArray {
         return a;
     }
 
+    // Another clever solution to the problem above
+    public int[] plusOne2(int[] digits) {
+
+        int n = digits.length;
+        for (int i = n - 1; i >= 0; i--) {
+            if (digits[i] < 9) {
+                digits[i]++;
+                return digits;
+            }
+
+            digits[i] = 0;
+        }
+
+        // The last part of code is only for the case that the whole input array is 9s. For example : 99999 -----> 100000
+        // Any other case would return in the loop.
+        int[] newNumber = new int[n + 1];
+        newNumber[0] = 1;
+
+        return newNumber;
+    }
+
     /**
      * Problem 8: Move zeros
      *
@@ -833,7 +854,7 @@ public class LeetArray {
      *
      * <p>
      * Note:
-     *
+     * <p>
      * You have to rotate the image in-place, which means you have to modify the input 2D matrix directly.
      * DO NOT allocate another 2D matrix and do the rotation.
      *
@@ -845,7 +866,7 @@ public class LeetArray {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = i + 1; j < matrix[0].length; j++) {
 
-                int temp =  matrix[i][j];
+                int temp = matrix[i][j];
                 matrix[i][j] = matrix[j][i];
                 matrix[j][i] = temp;
             }

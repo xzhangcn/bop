@@ -821,6 +821,32 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/22/2020: Sort Characters By Frequency.
+     * <p>
+     * Given a string, sort it in decreasing order based on the frequency of characters.
+     *
+     * @param s a string
+     * @return the sorted string
+     */
+    public String frequencySort(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray())
+            map.put(c, map.getOrDefault(c, 0) + 1);
+
+        PriorityQueue<Map.Entry<Character, Integer>> pq = new PriorityQueue<>((a, b) -> b.getValue() - a.getValue());
+        pq.addAll(map.entrySet());
+
+        StringBuilder sb = new StringBuilder();
+        while (!pq.isEmpty()) {
+            Map.Entry<Character, Integer> e = pq.poll();
+            for (int i = 0; i < (int)e.getValue(); i++)
+                sb.append(e.getKey());
+        }
+
+        return sb.toString();
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -942,9 +968,14 @@ public class Leet30May {
         int p20_k = 2;
         System.out.printf("The %dth smallest element in the BST is %d\n", p20_k, leet30May.kthSmallest(p20_tn1, p20_k));
 
-        System.out.println("\n>>> Problem on 05/21/2020: Count Square Sub-matrices with All Ones。");
+        System.out.println("\n>>> Problem on 05/21/2020: Count Square Sub-matrices with All Ones.");
         int[][] p21_matrix = {{0,1,1,1}, {1,1,1,1}, {0,1,1,1}};
         System.out.printf("Count Square Sub-matrices with All Ones: %d\n", leet30May.countSquares(p21_matrix));
+
+        System.out.println("\n>>> Problem on 05/22/2020: Sort Characters By Frequency.");
+        String p22_s = "tree";
+        System.out.printf("The result of sorting '%s' in decreasing order based on the frequency of characters: %s\n",
+                p22_s, leet30May.frequencySort(p22_s));
 
     }
 }

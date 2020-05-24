@@ -839,11 +839,49 @@ public class Leet30May {
         StringBuilder sb = new StringBuilder();
         while (!pq.isEmpty()) {
             Map.Entry<Character, Integer> e = pq.poll();
-            for (int i = 0; i < (int)e.getValue(); i++)
+            for (int i = 0; i < (int) e.getValue(); i++)
                 sb.append(e.getKey());
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Problem on the day of 05/23/2020: Interval List Intersections.
+     * <p>
+     * Given two lists of closed intervals, each list of intervals is pairwise disjoint and in sorted order.
+     * <p>
+     * Return the intersection of these two interval lists.
+     * <p>
+     * (Formally, a closed interval [a, b] (with a <= b) denotes the set of real numbers x with a <= x <= b.
+     * The intersection of two closed intervals is a set of real numbers that is either empty, or can be represented
+     * as a closed interval.  For example, the intersection of [1, 3] and [2, 4] is [2, 3].)
+     *
+     * @param A a list of closed intervals
+     * @param B another list of closed intervals
+     * @return the intersection of these two interval lists
+     */
+    public int[][] intervalIntersection(int[][] A, int[][] B) {
+        List<int[]> ans = new ArrayList<>();
+        int i = 0, j = 0;
+
+        while (i < A.length && j < B.length) {
+            // Let's check if A[i] intersects B[j].
+            // lo - the startpoint of the intersection
+            // hi - the endpoint of the intersection
+            int lo = Math.max(A[i][0], B[j][0]);
+            int hi = Math.min(A[i][1], B[j][1]);
+            if (lo <= hi)
+                ans.add(new int[]{lo, hi});
+
+            // Remove the interval with the smallest endpoint
+            if (A[i][1] < B[j][1])
+                i++;
+            else
+                j++;
+        }
+
+        return ans.toArray(new int[ans.size()][]);
     }
 
     /**
@@ -969,13 +1007,21 @@ public class Leet30May {
         System.out.printf("The %dth smallest element in the BST is %d\n", p20_k, leet30May.kthSmallest(p20_tn1, p20_k));
 
         System.out.println("\n>>> Problem on 05/21/2020: Count Square Sub-matrices with All Ones.");
-        int[][] p21_matrix = {{0,1,1,1}, {1,1,1,1}, {0,1,1,1}};
+        int[][] p21_matrix = {{0, 1, 1, 1}, {1, 1, 1, 1}, {0, 1, 1, 1}};
         System.out.printf("Count Square Sub-matrices with All Ones: %d\n", leet30May.countSquares(p21_matrix));
 
         System.out.println("\n>>> Problem on 05/22/2020: Sort Characters By Frequency.");
         String p22_s = "tree";
         System.out.printf("The result of sorting '%s' in decreasing order based on the frequency of characters: %s\n",
                 p22_s, leet30May.frequencySort(p22_s));
+
+        System.out.println("\n>>> Problem on 05/23/2020: Interval List Intersections.");
+        int[][] p23_A = {{0, 2}, {5, 10}, {13, 23}, {24, 25}};
+        int[][] p23_B = {{1, 5}, {8, 12}, {15, 24}, {25, 26}};
+        int[][] p23_ans = leet30May.intervalIntersection(p23_A, p23_B);
+        for (int[] row : p23_ans)
+            System.out.printf("[%d, %d]\t", row[0], row[1]);
+        System.out.println();
 
     }
 }

@@ -885,14 +885,14 @@ public class Leet30May {
     }
 
     /**
-     * Problem on the day of 05/23/2020: Construct Binary Search Tree from Preorder Traversal.
+     * Problem on the day of 05/24/2020: Construct Binary Search Tree from Preorder Traversal.
      * <p>
      * Return the root node of a binary search tree that matches the given preorder traversal.
-     *
+     * <p>
      * (Recall that a binary search tree is a binary tree where for every node, any descendant
      * of node.left has a value < node.val, and any descendant of node.right has a value > node.val.
      * Also recall that a preorder traversal displays the value of the node first, then traverses node.left, then traverses node.right.)
-     *
+     * <p>
      * It's guaranteed that for the given test cases there is always possible to find a binary search tree with the given requirements.
      *
      * @param preorder a preorder traversal of a BST.
@@ -913,11 +913,45 @@ public class Leet30May {
             return new TreeNode(val);
 
         int cmp = val - x.val;
-        if      (cmp < 0) x.left  = put(x.left, val);
+        if (cmp < 0) x.left = put(x.left, val);
         else if (cmp > 0) x.right = put(x.right, val);
-        else              x.val   = val;
+        else x.val = val;
 
         return x;
+    }
+
+    /**
+     * Problem on the day of 05/25/2020: Uncrossed Lines.
+     * <p>
+     * We write the integers of A and B (in the order they are given) on two separate horizontal lines.
+     * <p>
+     * Now, we may draw connecting lines: a straight line connecting two numbers A[i] and B[j] such that:
+     * <p>
+     * A[i] == B[j];
+     * The line we draw does not intersect any other connecting (non-horizontal) line.
+     * Note that a connecting lines cannot intersect even at the endpoints: each number can only belong to one connecting line.
+     * <p>
+     * Return the maximum number of connecting lines we can draw in this way.
+     *
+     * @param A an array of integers.
+     * @param A another array of integers.
+     * @return the maximum number of connecting lines we can draw in this way.
+     */
+    public int maxUncrossedLines(int[] A, int[] B) {
+        // This problem is nothing more than longest common subsequence problem。
+
+        int[][] dp = new int[A.length + 1][B.length + 1];
+
+        for (int i = 1; i <= A.length; i++) {
+            for (int j = 1; j <= B.length; j++) {
+                if (A[i - 1] == B[j - 1])
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                else
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+
+        return dp[A.length][B.length];
     }
 
     /**
@@ -1060,11 +1094,14 @@ public class Leet30May {
         System.out.println();
 
         System.out.println("\n>>> Problem on 05/24/2020: Construct Binary Search Tree from Preorder Traversal.");
-        int[] p24_preorder = {8,5,1,7,10,12};
+        int[] p24_preorder = {8, 5, 1, 7, 10, 12};
         TreeNode p24_root = leet30May.bstFromPreorder(p24_preorder);
         List<Integer> p24_inorder = (new LeetTree()).inOrderTraversal(p24_root);
         System.out.println(p24_inorder);
 
+        System.out.println("\n>>> Problem on 05/25/2020: Uncrossed Lines.");
+        int[] p25_A = {1, 4, 2}, p25_B = {1, 2, 4};
+        System.out.printf("The maximum number of connecting lines we can draw is %d\n", leet30May.maxUncrossedLines(p25_A, p25_B));
 
     }
 }

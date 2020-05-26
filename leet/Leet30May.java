@@ -955,6 +955,56 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/26/2020: Contiguous Array.
+     * <p>
+     * Given a binary array, find the maximum length of a contiguous subarray with equal number of 0 and 1.
+     *
+     * @param nums a binary array.
+     * @return the maximum length of a contiguous sub-array with equal number of 0 and 1.
+     */
+    public int findMaxLength(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0)
+                nums[i] = -1;
+        }
+
+        Map<Integer, Integer> sumToIndex = new HashMap<>();
+        sumToIndex.put(0, -1);
+        int sum = 0, max = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+
+            if (sumToIndex.containsKey(sum)) {
+                max = Math.max(max, i - sumToIndex.get(sum));
+            } else {
+                sumToIndex.put(sum, i);
+            }
+        }
+
+        return max;
+    }
+
+    // A more concise solution to the above problem
+    public int findMaxLength2(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+
+        int maxlen = 0, count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            count = count + (nums[i] == 1 ? 1 : -1);
+            
+            if (map.containsKey(count)) {
+                maxlen = Math.max(maxlen, i - map.get(count));
+            } else {
+                map.put(count, i);
+            }
+        }
+
+        return maxlen;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -1102,6 +1152,10 @@ public class Leet30May {
         System.out.println("\n>>> Problem on 05/25/2020: Uncrossed Lines.");
         int[] p25_A = {1, 4, 2}, p25_B = {1, 2, 4};
         System.out.printf("The maximum number of connecting lines we can draw is %d\n", leet30May.maxUncrossedLines(p25_A, p25_B));
+
+        System.out.println("\n>>> Problem on 05/26/2020: Contiguous Array.");
+        int[] p26_nums = {0, 1, 0, 0, 1, 1, 0};
+        System.out.printf("The maximum length of a contiguous sub-array with equal number of '0' and '1' is %d\n", leet30May.findMaxLength(p26_nums));
 
     }
 }

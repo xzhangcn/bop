@@ -993,7 +993,7 @@ public class Leet30May {
         int maxlen = 0, count = 0;
         for (int i = 0; i < nums.length; i++) {
             count = count + (nums[i] == 1 ? 1 : -1);
-            
+
             if (map.containsKey(count)) {
                 maxlen = Math.max(maxlen, i - map.get(count));
             } else {
@@ -1002,6 +1002,61 @@ public class Leet30May {
         }
 
         return maxlen;
+    }
+
+    /**
+     * Problem on the day of 05/27/2020: Possible Bi-partition.
+     * <p>
+     * Given a set of N people (numbered 1, 2, ..., N), we would like to split everyone into two groups of any size.
+     * <p>
+     * Each person may dislike some other people, and they should not go into the same group.
+     * <p>
+     * Formally, if dislikes[i] = [a, b], it means it is not allowed to put the people numbered a and b into the same group.
+     * <p>
+     * Return true if and only if it is possible to split everyone into two groups in this way.
+     *
+     * @param N        number of people.
+     * @param dislikes an array of dislike relationships.
+     * @return true if and only if it is possible to split everyone into two groups in this way.
+     */
+    public boolean possibleBipartition(int N, int[][] dislikes) {
+        List<Integer>[] graph = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            graph[i] = new ArrayList<>();
+
+        for (int[] dislike : dislikes) {
+            int u = dislike[0] - 1;
+            int v = dislike[1] - 1;
+
+            graph[u].add(v);
+            graph[v].add(u);
+        }
+
+        int[] colors = new int[N];
+        for (int i = 0; i < N; i++) {
+            if (colors[i] != 0)
+                continue;
+
+            colors[i] = 1;
+            java.util.Queue<Integer> queue = new LinkedList<>();
+            queue.add(i);
+
+            while (!queue.isEmpty()) {
+                int node = queue.poll();
+
+                for (int adj : graph[node]) {
+                    if (colors[adj] == colors[node])
+                        return false;
+
+                    if (colors[adj] == 0) {
+                        colors[adj] = -colors[node];
+                        queue.add(adj);
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1157,5 +1212,9 @@ public class Leet30May {
         int[] p26_nums = {0, 1, 0, 0, 1, 1, 0};
         System.out.printf("The maximum length of a contiguous sub-array with equal number of '0' and '1' is %d\n", leet30May.findMaxLength(p26_nums));
 
+        System.out.println("\n>>> Problem on 05/27/2020: Possible Bipartition.");
+        int p27_N = 4;
+        int[][] p27_dislikes = {{1, 2}, {1, 3}, {2, 4}};
+        System.out.printf("Possible Bipartition ? %b \n", leet30May.possibleBipartition(p27_N, p27_dislikes));
     }
 }

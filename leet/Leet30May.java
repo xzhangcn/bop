@@ -1129,6 +1129,39 @@ public class Leet30May {
     }
 
     /**
+     * Problem on the day of 05/30/2020: K Closest Points to Origin.
+     * <p>
+     * We have a list of points on the plane.  Find the K closest points to the origin (0, 0).
+     * <p>
+     * (Here, the distance between two points on a plane is the Euclidean distance.)
+     * <p>
+     * You may return the answer in any order.  The answer is guaranteed to be unique (except for the order that it is in.)
+     *
+     * https://leetcode.com/problems/k-closest-points-to-origin/discuss/220235/Java-Three-solutions-to-this-classical-K-th-problem.
+     *
+     * @param points a list of points
+     * @param K      a number
+     * @return the K closest points
+     */
+    public int[][] kClosest(int[][] points, int K) {
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((p1, p2) -> p2[0] * p2[0] + p2[1] * p2[1] - p1[0] * p1[0] - p1[1] * p1[1]);
+
+        for (int[] p : points) {
+            pq.offer(p);
+            if (pq.size() > K) {
+                pq.poll();
+            }
+        }
+
+        int[][] res = new int[K][2];
+        while (K > 0) {
+            res[--K] = pq.poll();
+        }
+
+        return res;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -1297,5 +1330,12 @@ public class Leet30May {
         int[][] p2_prerequisites = {{1, 0}, {0, 1}};
         System.out.printf("Can finish all courses? %b\n", leet30May.canFinish(p2_numCourses, p2_prerequisites));
 
+        System.out.println("\n>>> Problem on 05/30/2020: K Closest Points to Origin.");
+        int[][] p30_points = {{3, 3}, {5, -1}, {-2, 4}};
+        int p30_K = 2;
+        for (int[] point : leet30May.kClosest(p30_points, p30_K)) {
+            System.out.printf("[%d, %d]\t", point[0], point[1]);
+        }
+        System.out.println();
     }
 }

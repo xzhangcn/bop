@@ -58,11 +58,25 @@ public class Leet30Jun {
     }
 
     /**
+     * Problem on the day of 06/02/2020: Delete Node in a Linked List.
+     * <p>
+     * Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+     *
+     * @param node a node in a linked list
+     */
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
      */
     public static void main(String[] args) {
         System.out.println("\n>>> Problem on the day of 06/01/2020: Invert Binary Tree.");
+
+        System.out.println("\n>>> Problem on the day of 06/02/2020: Delete Node in a Linked List.");
     }
 }

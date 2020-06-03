@@ -70,6 +70,33 @@ public class Leet30Jun {
     }
 
     /**
+     * Problem on the day of 06/03/2020: Two City Scheduling.
+     * <p>
+     * There are 2N people a company is planning to interview. The cost of flying the i-th person to city A is costs[i][0],
+     * and the cost of flying the i-th person to city B is costs[i][1].
+     * <p>
+     * Return the minimum cost to fly every person to a city such that exactly N people arrive in each city.
+     *
+     * @param costs an array of costs
+     * @return the minimum cost
+     */
+    public int twoCitySchedCost(int[][] costs) {
+        Arrays.sort(costs, (a, b) -> {
+            return (a[0] - a[1]) - (b[0] - b[1]);
+        });
+
+        int res = 0;
+        for (int i = 0; i < costs.length; i++) {
+            if (i < costs.length / 2) {
+                res += costs[i][0];
+            } else
+                res += costs[i][1];
+        }
+
+        return res;
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -78,5 +105,7 @@ public class Leet30Jun {
         System.out.println("\n>>> Problem on the day of 06/01/2020: Invert Binary Tree.");
 
         System.out.println("\n>>> Problem on the day of 06/02/2020: Delete Node in a Linked List.");
+
+        System.out.println("\n>>> Problem on the day of 06/03/2020: Two City Scheduling.");
     }
 }

@@ -97,6 +97,31 @@ public class Leet30Jun {
     }
 
     /**
+     * Problem on the day of 06/04/2020: Reverse String.
+     * <p>
+     * Write a function that reverses a string. The input string is given as an array of characters char[].
+     *
+     * Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.
+     *
+     * You may assume all the characters consist of printable ascii characters.
+     *
+     * @param s a string
+     */
+    public void reverseString(char[] s) {
+        int start = 0, end = s.length - 1;
+
+        // The entire logic for reversing a string is based on using the opposite directional two-pointer approach
+        while (start < end) {
+            char temp = s[start];
+            s[start] = s[end];
+            s[end] = temp;
+
+            start++;
+            end--;
+        }
+    }
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -107,5 +132,7 @@ public class Leet30Jun {
         System.out.println("\n>>> Problem on the day of 06/02/2020: Delete Node in a Linked List.");
 
         System.out.println("\n>>> Problem on the day of 06/03/2020: Two City Scheduling.");
+
+        System.out.println("\n>>> Problem on the day of 06/04/2020: Reverse String.");
     }
 }

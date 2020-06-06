@@ -100,9 +100,9 @@ public class Leet30Jun {
      * Problem on the day of 06/04/2020: Reverse String.
      * <p>
      * Write a function that reverses a string. The input string is given as an array of characters char[].
-     *
+     * <p>
      * Do not allocate extra space for another array, you must do this by modifying the input array in-place with O(1) extra memory.
-     *
+     * <p>
      * You may assume all the characters consist of printable ascii characters.
      *
      * @param s a string
@@ -122,6 +122,70 @@ public class Leet30Jun {
     }
 
     /**
+     * Problem on the day of 06/05/2020: Random Pick with Weight.
+     * <p>
+     * Given an array w of positive integers, where w[i] describes the weight of index i, write a function
+     * pickIndex which randomly picks an index in proportion to its weight.
+     *
+     * @param s a string
+     */
+    /*
+    class Solution {
+
+    Random random;
+    int[] wSums;
+
+    public Solution(int[] w) {
+        this.random = new Random();
+        for(int i=1; i<w.length; ++i)
+            w[i] += w[i-1];
+        this.wSums = w;
+    }
+
+    public int pickIndex() {
+        int len = wSums.length;
+        int idx = random.nextInt(wSums[len-1]) + 1;
+        int left = 0, right = len - 1;
+        // search position
+        while(left < right){
+            int mid = left + (right-left)/2;
+            if(wSums[mid] == idx)
+                return mid;
+            else if(wSums[mid] < idx)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return left;
+    }
+}
+     */
+
+    /**
+     * Problem on the day of 06/06/2020: Queue Reconstruction by Height.
+     * <p>
+     * Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k),
+     * where h is the height of the person and k is the number of people in front of this person who have a height
+     * greater than or equal to h. Write an algorithm to reconstruct the queue.
+     *
+     * @param people an array
+     */
+    public int[][] reconstructQueue(int[][] people) {
+        //pick up the tallest guy first
+        //when insert the next tall guy, just need to insert him into kth position
+        //repeat until all people are inserted into list
+        Arrays.sort(people, (a, b) -> a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]);
+
+        List<int[]> res = new LinkedList<>();
+        for (int[] cur : people) {
+            res.add(cur[1], cur);
+        }
+
+        return res.toArray(new int[people.length][]);
+    }
+
+
+    /**
      * Unit tests
      *
      * @param args command line arguments
@@ -134,5 +198,9 @@ public class Leet30Jun {
         System.out.println("\n>>> Problem on the day of 06/03/2020: Two City Scheduling.");
 
         System.out.println("\n>>> Problem on the day of 06/04/2020: Reverse String.");
+
+        System.out.println("\n>>> Problem on the day of 06/05/2020: Random Pick with Weight.");
+
+        System.out.println("\n>>> Problem on the day of 06/06/2020: Queue Reconstruction by Height.");
     }
 }

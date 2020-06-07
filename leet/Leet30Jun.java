@@ -184,6 +184,30 @@ public class Leet30Jun {
         return res.toArray(new int[people.length][]);
     }
 
+    /**
+     * Problem on the day of 06/07/2020: Coin Change 2.
+     * <p>
+     * You are given coins of different denominations and a total amount of money. Write a function to compute
+     * the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.
+     *
+     * https://leetcode.com/problems/coin-change-2/discuss/99212/Knapsack-problem-Java-solution-with-thinking-process-O(nm)-Time-and-O(m)-Space
+     *
+     * @param amount an integer
+     * @param coins an array
+     * @return the number of combinations that make up that amount
+     */
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+
+        for (int coin : coins) {
+            for (int i = coin; i <= amount; i++) {
+                dp[i] += dp[i-coin];
+            }
+        }
+
+        return dp[amount];
+    }
 
     /**
      * Unit tests
@@ -202,5 +226,7 @@ public class Leet30Jun {
         System.out.println("\n>>> Problem on the day of 06/05/2020: Random Pick with Weight.");
 
         System.out.println("\n>>> Problem on the day of 06/06/2020: Queue Reconstruction by Height.");
+
+        System.out.println("\n>>> Problem on the day of 06/07/2020: Coin Change 2.");
     }
 }
